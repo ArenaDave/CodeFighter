@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E1770B9E-F0FD-40F5-A7E0-9E0C0243BE5B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{411C0809-3BA8-40B2-9296-07069238A4DE}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CodeFighter", "src\CodeFighter\CodeFighter.xproj", "{4F489991-52D5-4684-86A2-D4414FD69A36}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F489991-52D5-4684-86A2-D4414FD69A36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F489991-52D5-4684-86A2-D4414FD69A36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F489991-52D5-4684-86A2-D4414FD69A36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F489991-52D5-4684-86A2-D4414FD69A36}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4F489991-52D5-4684-86A2-D4414FD69A36} = {E1770B9E-F0FD-40F5-A7E0-9E0C0243BE5B}
+	EndGlobalSection
+EndGlobal
