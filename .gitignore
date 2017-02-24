@@ -250,3 +250,5 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/CodeFighter/CodeFighterWeb/images/explosion.pdn
+/CodeFighter/CodeFighterWeb/images/sprites.png

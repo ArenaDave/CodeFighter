@@ -50,7 +50,8 @@ $(document).ready(function () {
 		'images/Galaxy_star_field2.png',
 		'images/Galaxy_star_field3.png',
 		'images/Galaxy_star_field4.png',
-        'images/ship2.png'
+        'images/ship2.png',
+        'images/explosion.png'
     ]);
     resources.onReady(init);
 });
@@ -62,6 +63,7 @@ $(document).ready(function () {
 function init() {
     initBackground();
     initShips();
+    initExplosion(); // test
     renderAll();
     gameLoop();
 }
@@ -96,7 +98,18 @@ function initShips() {
         target: [19 * cellSize, 19 * cellSize],
         isAlive: true
     };
-
+}
+function initExplosion() {
+    explosions.push({
+        pos: [11*cellSize,11*cellSize],
+        sprite: new Sprite('images/explosion.png',
+                           [0, 0],
+                           [32, 32],
+                           16,
+                           [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                           null,
+                           false)
+    });
 }
 
 // Cross-browser requestAnimationFrame
@@ -299,7 +312,15 @@ function updateTorpedoes(dt) {
 
 // EXPLOSIONS
 function updateExplosions(dt) {
+    for (var i = 0; i < explosions.length; i++) {
+        explosions[i].sprite.update(dt);
 
+        // Remove if animation is done
+        if (explosions[i].sprite.done) {
+            explosions.splice(i, 1);
+            i--;
+        }
+    }
 }
 
 
