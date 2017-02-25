@@ -49,6 +49,9 @@ var lastTime = Date.now();
 // action queue
 var actions = null;
 
+// start/pause variable
+var keepGoing = false;
+
 
 document.addEventListener('DOMContentLoaded', function () {
     // get canvas
@@ -73,7 +76,45 @@ document.addEventListener('DOMContentLoaded', function () {
     resources.onReady(init);
 });
 
-
+//BUTTONS
+function start() {
+    keepGoing = true;
+    startGame();
+    var startButton = document.getElementById("btnStart");
+    startButton.className += "hidden";
+    var pauseButton = document.getElementById("btnPause");
+    pauseButton.className = pauseButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
+}
+function pause() {
+    keepGoing = false;
+    var pauseButton = document.getElementById("btnPause");
+    pauseButton.className += "hidden";
+    var resumeButton = document.getElementById("btnResume");
+    resumeButton.className = resumeButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
+}
+function resume() {
+    var now = Date.now();
+    keepGoing = true;
+    var resumeButton = document.getElementById("btnResume");
+    resumeButton.className += "hidden";
+    var pauseButton = document.getElementById("btnPause");
+    pauseButton.className = pauseButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
+}
+function resetButtons() {
+    if (!document.getElementById("btnResume").className.match(/(?:^|\s)hidden(?!\S)/)) {
+        var resumeButton = document.getElementById("btnResume");
+        resumeButton.className += "hidden";
+    }
+    if (!document.getElementById("btnPause").className.match(/(?:^|\s)hidden(?!\S)/)) {
+        var pauseButton = document.getElementById("btnPause");
+        pauseButton.className += "hidden";
+    }
+    if (document.getElementById("btnStart").className.match(/(?:^|\s)hidden(?!\S)/)) {
+        var startButton = document.getElementById("btnStart");
+        startButton.className = startButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
+    }
+    keepGoing = false;
+}
 
 // RANDOMIZER
 function rollDice(sides) {
@@ -90,7 +131,6 @@ function rollFloat(max) {
 function init() {
     initBackground();
     renderAll();
-    getActions();
 }
 function initBackground() {
     var index = 0;
@@ -144,7 +184,7 @@ function beginNextAction() {
         var startingPosition = [action.add.X, action.add.Y];
         var sizeCategory = action.add.sizeCategory;
         var isEnemy = action.add.isEnemy;
-        addShip(shipID, startingPosition,sizeCategory,isEnemy);
+        addShip(shipID, startingPosition, sizeCategory, isEnemy);
     }
     else if (action.actionType == 'kill') {
         var shipID = action.kill.ID;
@@ -176,14 +216,22 @@ function beginNextAction() {
 
 
 // GAME LOOP
+function startGame() {
+    ships = [];
+    beamShots = [];
+    explosions = [];
+    getActions();
+}
 function gameLoop() {
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
 
-    updateShips(dt);
-    updateBeams(dt);
-    updateExplosions(dt);
-    renderAll();
+    if (keepGoing) {
+        updateShips(dt);
+        updateBeams(dt);
+        updateExplosions(dt);
+        renderAll();
+    }
 
     lastTime = now;
 
@@ -197,6 +245,7 @@ function gameLoop() {
     }
     else {
         renderAll();
+        resetButtons();
     }
 
 }
@@ -339,7 +388,7 @@ function updateShips(dt) {
             if (ships[i].isEnemy) {
                 imgPath = 'images/enemy';
             }
-            ships[i].sprite = new Sprite(imgPath+ships[i].sizeCategory+'.png', [cellSize * dir.indexOf(facing), 0], [cellSize, cellSize])
+            ships[i].sprite = new Sprite(imgPath + ships[i].sizeCategory + '.png', [cellSize * dir.indexOf(facing), 0], [cellSize, cellSize])
             // complete Action
             if (ships[i].pos[0] == ships[i].target[0] && ships[i].pos[1] == ships[i].pos[1]) {
                 shipsDone = true;

@@ -17,9 +17,17 @@
             width: 800px;
             margin: 0 auto;
         }
+        .hidden{
+            display:none;
+        }
     </style>
 </head>
 <body>
+    <div class="centered" id="buttons">
+        <button onclick="start();" id="btnStart" value="Start">Start</button>
+        <button onclick="pause();" id="btnPause" value="Pause" class="hidden">Pause</button>
+        <button onclick="resume();" id="btnResume" value="Resume" class="hidden">Resume</button>
+    </div>
     <div class="centered">
         <canvas id="mainCanvas">Your browser does not support HTML5</canvas>
     </div>
