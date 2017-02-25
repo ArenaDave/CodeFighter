@@ -252,3 +252,4 @@ paket-files/
 *.sln.iml
 /CodeFighter/CodeFighterWeb/images/explosion.pdn
 /CodeFighter/CodeFighterWeb/images/sprites.png
+/CodeFighter/CodeFighterWeb/web.config
