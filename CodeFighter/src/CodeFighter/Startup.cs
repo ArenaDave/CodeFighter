@@ -36,7 +36,9 @@ namespace CodeFighter
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            app.UseStaticFiles();
+            app.UseDefaultFiles();
+            app.UseFileServer();
             app.UseMvc();
         }
     }

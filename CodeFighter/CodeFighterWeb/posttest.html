@@ -1,0 +1,34 @@
+<html>
+<body>
+
+<button id='btnSend' onclick='send()'>Send</button>
+<div id='divResult'>
+</div>
+
+<script type='text/javascript'>
+	function send(){
+		var data = {
+			scenarioID: '00000000-0000-0000-0000-000000000000',
+			playerID: '00000000-0000-0000-0000-000000000000',
+			playerCode: 'dostuff'
+		};
+		
+		var http = new XMLHttpRequest();
+		var url = 'http://codefighter.local/api/gameEngine';
+		http.open('POST',url,true);
+		http.onreadystatechange = function(){
+			if(http.readyState == 4 && http.status == 200){
+				var result = document.getElementById('divResult');
+				result.innerHTML = http.responseText;
+			}
+		};
+		http.setRequestHeader('Content-Type','application/json; charset=UTF-8');
+		
+		http.send(JSON.stringify(data));
+		
+	}
+
+</script>
+
+</body>
+</html>

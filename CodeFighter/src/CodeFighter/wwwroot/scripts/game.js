@@ -78,45 +78,59 @@ document.addEventListener('DOMContentLoaded', function () {
 
 //BUTTONS
 function start() {
+    // begin the game
     keepGoing = true;
     startGame();
+    // hide the start button
     var startButton = document.getElementById("btnStart");
     startButton.className += "hidden";
+    // show the pause button
     var pauseButton = document.getElementById("btnPause");
     pauseButton.className = pauseButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
 }
 function pause() {
+    // pause the game (rendering keeps going, need to fix this to actually pause the entire loop for performance)
     keepGoing = false;
+    // hide the pause button
     var pauseButton = document.getElementById("btnPause");
     pauseButton.className += "hidden";
+    // show the resume button
     var resumeButton = document.getElementById("btnResume");
     resumeButton.className = resumeButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
 }
 function resume() {
-    var now = Date.now();
+    // reset the last time (or else it will skip a lot of frames) and resume the loop
+    lastTime = Date.now();
     keepGoing = true;
+    // hide the resume button
     var resumeButton = document.getElementById("btnResume");
     resumeButton.className += "hidden";
+    // show the pause button
     var pauseButton = document.getElementById("btnPause");
     pauseButton.className = pauseButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
 }
 function resetButtons() {
+    // hide the resume button
     if (!document.getElementById("btnResume").className.match(/(?:^|\s)hidden(?!\S)/)) {
         var resumeButton = document.getElementById("btnResume");
         resumeButton.className += "hidden";
     }
+    // hide the pause button
     if (!document.getElementById("btnPause").className.match(/(?:^|\s)hidden(?!\S)/)) {
         var pauseButton = document.getElementById("btnPause");
         pauseButton.className += "hidden";
     }
+    // show the start button
     if (document.getElementById("btnStart").className.match(/(?:^|\s)hidden(?!\S)/)) {
         var startButton = document.getElementById("btnStart");
         startButton.className = startButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
     }
+    // stop the loop
     keepGoing = false;
 }
 
 // RANDOMIZER
+// re-seed Math.random each time for better distribution
 function rollDice(sides) {
     return Math.floor(Math.random(new Date().getMilliseconds()) * sides + 1);
 }
@@ -151,33 +165,36 @@ function initBackground() {
 
 // ACTIONS
 function getActions() {
-    // TODO: fetch actions from web service
-    loadJSON(function (response) {
-        actions = JSON.parse(response);
-        gameLoop();
-    });
-
-
-}
-
-function loadJSON(callback) {
-
-    var xobj = new XMLHttpRequest();
-    xobj.overrideMimeType('application/json');
-    xobj.open('GET', 'scripts/actions.json', true);
-    xobj.onreadystatechange = function () {
-        if (xobj.readyState == 4 && xobj.status == '200') {
-            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-            callback(xobj.responseText);
+    // build payload to send
+    var data = {
+        scenarioID: '00000000-0000-0000-0000-000000000000',
+        playerID: '00000000-0000-0000-0000-000000000000',
+        playerCode: 'dostuff'
+    };
+    // prep request for POST
+    var http = new XMLHttpRequest();
+    var url = 'http://codefighter.local/api/gameEngine';
+    http.open('POST', url, true);
+    // when done, parse result into actions and start game loop
+    // TODO: add error handling for error results
+    http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+            actions = JSON.parse(http.responseText);
+            gameLoop();
         }
     };
-    xobj.send(null);
+    http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    // send payload
+    http.send(JSON.stringify(data));
+
 }
 
 function beginNextAction() {
+    // check if we're out of actions (ends the game loop)
     if (actions.length == 0) {
         return false;
     }
+    // grab action at index == 0 (and remove from array)
     var action = actions.shift();
     if (action.actionType == 'add') {
         var shipID = action.details.id;
@@ -209,7 +226,7 @@ function beginNextAction() {
         var targetPosition = [action.details.x, action.details.y];
         moveShip(shipID, targetPosition);
     }
-
+    // keep the game loop going
     return true;
 }
 
@@ -217,33 +234,40 @@ function beginNextAction() {
 
 // GAME LOOP
 function startGame() {
+    // clear everything and get the actions list
     ships = [];
     beamShots = [];
     explosions = [];
     getActions();
 }
 function gameLoop() {
+    // calculate delta since last execution (to smooth regardless of even framerates)
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
 
+    // for right now the loop keeps going but the screen isnt updated.
+    // eventually the pause/resume buttons should pause or trigger the whole game loop.
     if (keepGoing) {
         updateShips(dt);
         updateBeams(dt);
         updateExplosions(dt);
         renderAll();
     }
-
+    // store last execution time
     lastTime = now;
 
+    // if we're done animating actions, get the next action
     var moreActions = true;
     if (shipsDone && beamsDone && explosionsDone) {
         moreActions = beginNextAction();
     }
 
+    // if there are more actions, or we're not done animating the current one(s), keep looping
     if (moreActions || !(shipsDone && beamsDone && explosionsDone)) {
         requestAnimFrame(gameLoop);
     }
     else {
+        // final render and reset the buttons
         renderAll();
         resetButtons();
     }
@@ -266,6 +290,7 @@ var requestAnimFrame = (function () {
 
 // RENDERING
 function renderAll() {
+    // clear all and re-render because of the lines
     ctx.clearRect(0, 0, gameH, gameW);
     renderEntities(backgroundTiles);
     renderEntities(ships);
@@ -277,7 +302,6 @@ function renderAll() {
 
 // SHIPS
 function addShip(shipID, startingPosition, sizeCategory, isEnemy) {
-    // TODO: add size and isEnemy
     var imgPath = 'images/ship';
     if (isEnemy) {
         imgPath = 'images/enemy';
@@ -402,8 +426,6 @@ function updateShips(dt) {
 
 // BEAMS
 function addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit) {
-
-
     // vary the origin & target points so the beams are slightly random
     var oX = randomizePoint(originPosition[0]);
     var oY = randomizePoint(originPosition[1]);
@@ -427,12 +449,7 @@ function addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit) {
 
     // delay beam a random amount so that not all beams appear at once
     var delay = defaultBeamRenderDelay + rollFloat(beamRenderDelayMaxRange);
-    //if (rollDice(2) == 1) {
-    //    delay += rollFloat(beamRenderDelayMaxRange);
-    //} else {
-    //    delay -= rollFloat(beamRenderDelayMaxRange);
-    //}
-
+    
     // add to the array
     beamShots.push({
         lineWidth: thickness,
@@ -449,6 +466,8 @@ function addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit) {
 }
 
 function randomizePoint(targetN) {
+    // reusable
+    // starting from the center of the cell, add or subtract a random deviation
     var dN = targetN * cellSize + (cellSize / 2);
     if (rollDice(2) == 1) {
         dN += rollDice(rndBeamDeviation);
@@ -474,11 +493,9 @@ function updateBeams(dt) {
                 var halfDuration = shot.startingDuration / 2;
                 var alpha = 0.0;
                 if (halfDuration <= shot.duration) { // ascending
-                    // starting 300, hd = 150, duration = 250, at = 50
                     alpha = 1 - (shot.duration / shot.startingDuration);
                 }
                 else { // descending
-                    // starting 300, hd = 150, duration = 100, at = 50
                     alpha = (shot.duration / shot.startingDuration);
                 }
                 var colorString = colorArray[0] + ',' + colorArray[1] + ',' + colorArray[2] + ',' + alpha.toFixed(2) + ')';

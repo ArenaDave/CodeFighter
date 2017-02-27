@@ -33,6 +33,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CodeFighterWeb", "CodeFight
 		SlnRelativePath = "CodeFighterWeb\"
 	EndProjectSection
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CodeFighter.Logic", "src\CodeFighter.Logic\CodeFighter.Logic.xproj", "{385D372F-11EB-49D8-B344-EC1C06D7D71A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{6201C8E6-9E35-4B17-9853-A4503F7B538C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6201C8E6-9E35-4B17-9853-A4503F7B538C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{6201C8E6-9E35-4B17-9853-A4503F7B538C}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{385D372F-11EB-49D8-B344-EC1C06D7D71A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{385D372F-11EB-49D8-B344-EC1C06D7D71A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{385D372F-11EB-49D8-B344-EC1C06D7D71A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{385D372F-11EB-49D8-B344-EC1C06D7D71A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,5 +60,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4F489991-52D5-4684-86A2-D4414FD69A36} = {E1770B9E-F0FD-40F5-A7E0-9E0C0243BE5B}
 		{6201C8E6-9E35-4B17-9853-A4503F7B538C} = {E1770B9E-F0FD-40F5-A7E0-9E0C0243BE5B}
+		{385D372F-11EB-49D8-B344-EC1C06D7D71A} = {E1770B9E-F0FD-40F5-A7E0-9E0C0243BE5B}
 	EndGlobalSection
 EndGlobal
