@@ -1,0 +1,189 @@
+[
+  {
+    "actionType": "add",
+    "add": {
+      "ID": 0,
+      "X": 5,
+      "Y": 5,
+      "isEnemy": false,
+      "sizeCategory": 2
+    }
+  },
+  {
+    "actionType": "add",
+    "add": {
+      "ID": 1,
+      "X": 10,
+      "Y": 10,
+      "isEnemy": true,
+      "sizeCategory": 2
+    }
+  },
+  {
+    "actionType": "move",
+    "move": {
+      "ID": 0,
+      "X": 6,
+      "Y": 6
+    }
+  },
+  {
+    "actionType": "shoot",
+    "shoot": {
+      "shots": [
+        {
+          "oX": 6,
+          "oY": 6,
+          "tX": 10,
+          "tY": 10,
+          "isEnemy": false,
+          "isHit": true,
+          "isCrit": false
+        },
+        {
+          "oX": 6,
+          "oY": 6,
+          "tX": 10,
+          "tY": 10,
+          "isEnemy": false,
+          "isHit": false,
+          "isCrit": false
+        },
+        {
+          "oX": 6,
+          "oY": 6,
+          "tX": 10,
+          "tY": 10,
+          "isEnemy": false,
+          "isHit": true,
+          "isCrit": true
+        },
+        {
+          "oX": 6,
+          "oY": 6,
+          "tX": 10,
+          "tY": 10,
+          "isEnemy": false,
+          "isHit": true,
+          "isCrit": false
+        }
+      ]
+    }
+  },
+  {
+    "actionType": "move",
+    "move": {
+      "ID": 1,
+      "X": 9,
+      "Y": 9
+    }
+  },
+  {
+    "actionType": "shoot",
+    "shoot": {
+      "shots": [
+        {
+          "oX": 9,
+          "oY": 9,
+          "tX": 6,
+          "tY": 6,
+          "isEnemy": true,
+          "isHit": true,
+          "isCrit": false
+        },
+        {
+          "oX": 9,
+          "oY": 9,
+          "tX": 6,
+          "tY": 6,
+          "isEnemy": true,
+          "isHit": false,
+          "isCrit": false
+        },
+        {
+          "oX": 9,
+          "oY": 9,
+          "tX": 6,
+          "tY": 6,
+          "isEnemy": true,
+          "isHit": true,
+          "isCrit": true
+        },
+        {
+          "oX": 9,
+          "oY": 9,
+          "tX": 6,
+          "tY": 6,
+          "isEnemy": true,
+          "isHit": true,
+          "isCrit": false
+        }
+      ]
+    }
+  },
+  {
+    "actionType": "move",
+    "move": {
+      "ID": 0,
+      "X": 7,
+      "Y": 7
+    }
+  },
+  {
+    "actionType": "shoot",
+    "shoot": {
+      "shots": [
+        {
+          "oX": 7,
+          "oY": 7,
+          "tX": 9,
+          "tY": 9,
+          "isEnemy": false,
+          "isHit": true,
+          "isCrit": false
+        },
+        {
+          "oX": 7,
+          "oY": 7,
+          "tX": 9,
+          "tY": 9,
+          "isEnemy": false,
+          "isHit": false,
+          "isCrit": false
+        },
+        {
+          "oX": 7,
+          "oY": 7,
+          "tX": 9,
+          "tY": 9,
+          "isEnemy": false,
+          "isHit": true,
+          "isCrit": true
+        },
+        {
+          "oX": 7,
+          "oY": 7,
+          "tX": 9,
+          "tY": 9,
+          "isEnemy": false,
+          "isHit": true,
+          "isCrit": false
+        }
+      ]
+    }
+  },
+  {
+    "actionType": "kill",
+    "kill": {
+      "ID": 1
+    }
+  },
+  {
+    "actionType": "move",
+    "move": {
+      "ID": 0,
+      "X": 6,
+      "Y": 7
+    }
+  }
+]
