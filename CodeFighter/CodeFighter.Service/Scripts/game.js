@@ -213,9 +213,16 @@ function beginNextAction() {
     }
     else if (action.actionType == 'shoot') {
         for (s in action.details.shots) {
-            var originPosition = [action.details.shots[s].oX, action.details.shots[s].oY];
-            var targetPosition = [action.details.shots[s].tX, action.details.shots[s].tY];
-            var isEnemy = action.details.shots[s].isEnemy;
+            // get origin ship position
+            var originShip = ships.filter(function (obj) { return obj.id == action.details.shots[s].origin; })[0];
+            var originPosition = originShip.pos;
+            
+            // get target ship position
+            var targetPosition = ships.filter(function (obj) { return obj.id == action.details.shots[s].target; })[0].pos;
+            
+            // check if origin is enemy ship
+            var isEnemy = originShip.isEnemy;
+            
             var isHit = action.details.shots[s].isHit;
             var isCrit = action.details.shots[s].isCrit;
             addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit);
@@ -468,7 +475,7 @@ function addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit) {
 function randomizePoint(targetN) {
     // reusable
     // starting from the center of the cell, add or subtract a random deviation
-    var dN = targetN * cellSize + (cellSize / 2);
+    var dN = targetN + (cellSize / 2);
     if (rollDice(2) == 1) {
         dN += rollDice(rndBeamDeviation);
     } else {

@@ -1,8 +1,10 @@
 ﻿using CodeFighter.Logic;
+using CodeFighter.Logic.Animations;
+using CodeFighter.Logic.Scenarios;
+using CodeFighter.Logic.Utility;
 using CodeFighter.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Net;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -19,7 +21,7 @@ namespace CodeFighter.Controllers
         {
             return new JsonResult() { Data = new ClientPacket() };
         }
-        
+
         #endregion
 
         // POST api/gameEngine
@@ -28,7 +30,7 @@ namespace CodeFighter.Controllers
         {
             try
             {
-                
+
                 if (!validatePlayerID(packet.PlayerID))
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Invalid Player Token");
@@ -44,7 +46,7 @@ namespace CodeFighter.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,ex.ToString());
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, ex.ToString());
             }
         }
 
@@ -55,7 +57,7 @@ namespace CodeFighter.Controllers
 
         private bool validateScenarioID(Guid scenarioID)
         {
-            return true;
+            return scenarioID == Guid.Empty;
         }
 
         private object processPlayerCode(string playerCode)
@@ -65,58 +67,73 @@ namespace CodeFighter.Controllers
 
         private List<Animation> runScenario(Guid playerID, Guid scenarioID, object processedCode)
         {
+            // animation results are what are sent to the client
             List<Animation> result = new List<Animation>();
 
-            // TODO: add logic to run scenario for player and code
+            // get scenario
+            //Scenario currentScenario = getScenario(scenarioID);
 
+            // setup simulation
+            
+
+            // run simulation
+            // TODO: add logic to run scenario for player and code
             #region HARD CODED
             Point zeroLoc = new Point(5, 5);
             Point oneLoc = new Point(10, 10);
 
             // add ships
-            result.Add(new Animation(ActionType.Add, new AnimationAdd(0, zeroLoc, false, 2)));
-            result.Add(new Animation(ActionType.Add, new AnimationAdd(1, oneLoc, true, 2)));
+            result.Add(new Animation(AnimationActionType.Add, new AnimationAddDetails(0, zeroLoc, false, 2)));
+            result.Add(new Animation(AnimationActionType.Add, new AnimationAddDetails(1, oneLoc, true, 2)));
 
             // ship 0 turn 1
             zeroLoc.Offset(1, 1);
-            result.Add(new Animation(ActionType.Move, new AnimationMove(0, zeroLoc)));
-            List<AnimationShot> shots1 = new List<AnimationShot>();
-            shots1.Add(new AnimationShot(zeroLoc, oneLoc, false, true, false));
-            shots1.Add(new AnimationShot(zeroLoc, oneLoc, false, false, false));
-            shots1.Add(new AnimationShot(zeroLoc, oneLoc, false, true, true));
-            shots1.Add(new AnimationShot(zeroLoc, oneLoc, false, true, false));
-            result.Add(new Animation(ActionType.Shoot, new AnimationShoot(shots1)));
+            result.Add(new Animation(AnimationActionType.Move, new AnimationMoveDetails(0, zeroLoc)));
+            List<AnimationShotDetails> shots1 = new List<AnimationShotDetails>();
+            shots1.Add(new AnimationShotDetails(0, 1, true, false));
+            shots1.Add(new AnimationShotDetails(0, 1, false, false));
+            shots1.Add(new AnimationShotDetails(0, 1, true, true));
+            shots1.Add(new AnimationShotDetails(0, 1, true, false));
+
+            result.Add(new Animation(AnimationActionType.Shoot, new AnimationShootingDetails(shots1)));
 
             // ship 1 turn 1
             oneLoc.Offset(-1, -1);
-            result.Add(new Animation(ActionType.Move, new AnimationMove(1, oneLoc)));
-            List<AnimationShot> shots2 = new List<AnimationShot>();
-            shots2.Add(new AnimationShot(oneLoc, zeroLoc, true, true, false));
-            shots2.Add(new AnimationShot(oneLoc, zeroLoc, true, false, false));
-            shots2.Add(new AnimationShot(oneLoc, zeroLoc, true, true, true));
-            shots2.Add(new AnimationShot(oneLoc, zeroLoc, true, true, false));
-            result.Add(new Animation(ActionType.Shoot, new AnimationShoot(shots2)));
+            result.Add(new Animation(AnimationActionType.Move, new AnimationMoveDetails(1, oneLoc)));
+            List<AnimationShotDetails> shots2 = new List<AnimationShotDetails>();
+            shots2.Add(new AnimationShotDetails(1, 0, true, false));
+            shots2.Add(new AnimationShotDetails(1, 0, false, false));
+            shots2.Add(new AnimationShotDetails(1, 0, true, true));
+            shots2.Add(new AnimationShotDetails(1, 0, true, false));
+
+            result.Add(new Animation(AnimationActionType.Shoot, new AnimationShootingDetails(shots2)));
 
             // ship 0 turn 2
             zeroLoc.Offset(1, 1);
-            result.Add(new Animation(ActionType.Move, new AnimationMove(0, zeroLoc)));
-            List<AnimationShot> shots3 = new List<AnimationShot>();
-            shots3.Add(new AnimationShot(zeroLoc, oneLoc, false, true, false));
-            shots3.Add(new AnimationShot(zeroLoc, oneLoc, false, false, false));
-            shots3.Add(new AnimationShot(zeroLoc, oneLoc, false, true, true));
-            shots3.Add(new AnimationShot(zeroLoc, oneLoc, false, true, false));
-            result.Add(new Animation(ActionType.Shoot, new AnimationShoot(shots3)));
-            result.Add(new Animation(ActionType.Kill, new AnimationKill(1)));
+            result.Add(new Animation(AnimationActionType.Move, new AnimationMoveDetails(0, zeroLoc)));
+            List<AnimationShotDetails> shots3 = new List<AnimationShotDetails>();
+            shots3.Add(new AnimationShotDetails(0, 1, true, false));
+            shots3.Add(new AnimationShotDetails(0, 1, false, false));
+            shots3.Add(new AnimationShotDetails(0, 1, true, true));
+            shots3.Add(new AnimationShotDetails(0, 1, true, false));
+
+            result.Add(new Animation(AnimationActionType.Shoot, new AnimationShootingDetails(shots3)));
+            result.Add(new Animation(AnimationActionType.Kill, new AnimationKillDetails(1)));
 
             // ship 1 is dead!
 
             // ship 0 turn 3
             zeroLoc.Offset(-1, 0);
-            result.Add(new Animation(ActionType.Move, new AnimationMove(0, zeroLoc)));
-            
+            result.Add(new Animation(AnimationActionType.Move, new AnimationMoveDetails(0, zeroLoc)));
+
             #endregion
 
             return result;
+        }
+
+        private Scenario getScenario(Guid scenarioID)
+        {
+            throw new NotImplementedException();
         }
     }
 }
