@@ -3,7 +3,7 @@
 namespace CodeFighter.Logic.Utility
 {
 
-    public class StatWithMax
+    public class StatWithMax : ICloneable
     {
         int max = 0;
         int current = 0;
@@ -41,6 +41,7 @@ namespace CodeFighter.Logic.Utility
             Current = Math.Max(0, Current - amount);
             return result;
         }
+        
 
         public static StatWithMax operator -(StatWithMax swm, int subtraction)
         {
@@ -51,6 +52,16 @@ namespace CodeFighter.Logic.Utility
         {
             current = Max;
             max = Max;
+        }
+
+        private StatWithMax() { }
+
+        public object Clone()
+        {
+            StatWithMax copy = new StatWithMax();
+            copy.max = this.max;
+            copy.current = this.current;
+            return copy;
         }
     }
 

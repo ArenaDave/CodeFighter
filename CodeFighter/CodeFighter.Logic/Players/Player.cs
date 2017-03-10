@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CodeFighter.Logic.Players
 {
-    public class Player
+    public class Player : ICloneable
     {
         public int ID { get; set; }
         public Guid PlayerID { get; set; }
@@ -17,6 +17,25 @@ namespace CodeFighter.Logic.Players
             return this.Name;
         }
 
+        public object Clone()
+        {
+            Player copy = new Player();
+            copy.ID = this.ID;
+            copy.PlayerID = this.PlayerID;
+            copy.Name = (string)this.Name.Clone();
+            copy.IsAI = this.IsAI;
+            copy.IsDefeated = this.IsDefeated;
+            return copy;
+        }
+
         public dynamic GameLogic;
+        public Player()
+        {
+
+        }
+        public Player(bool isAI)
+        {
+            this.IsAI = isAI;
+        }
     }
 }

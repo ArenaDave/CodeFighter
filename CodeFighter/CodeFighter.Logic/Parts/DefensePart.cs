@@ -1,6 +1,8 @@
 ﻿using CodeFighter.Logic.Actions;
 using CodeFighter.Logic.Utility;
 using System.Collections.Generic;
+using System;
+using CodeFighter.Logic.Ships;
 
 namespace CodeFighter.Logic.Parts
 {
@@ -63,9 +65,24 @@ namespace CodeFighter.Logic.Parts
 
             return result;
         }
+
+        public override object Clone()
+        {
+            DefensePart copy = new DefensePart();
+            copy.Name = (string)this.Name.Clone();
+            copy.HP = (StatWithMax)this.HP.Clone();
+            copy.IsDestroyed = this.IsDestroyed;
+            copy.Target = (Ship)this.Target.Clone();
+            copy.Mass = this.Mass;
+            copy.Actions = (List<BaseAction>)this.Actions.Clone();
+            copy.DR = this.DR;
+            copy.DownAdjective = (string)this.DownAdjective.Clone();
+            copy.PenetrateVerb = (string)this.PenetrateVerb.Clone();
+            return copy;
+        }
         #endregion
-        
-        #region Constructor
+
+        #region Constructors
         public DefensePart(string name, int maxHP, double mass, int damageReduction, string downAdjective, string penetrateVerb, List<BaseAction> actions)
             : base(name, maxHP, mass, actions)
         {
@@ -73,6 +90,7 @@ namespace CodeFighter.Logic.Parts
             this.DownAdjective = downAdjective;
             this.PenetrateVerb = penetrateVerb;
         }
+        private DefensePart() : base() { }
         #endregion
 
     }

@@ -3,6 +3,7 @@ using CodeFighter.Logic.Ships;
 using CodeFighter.Logic.Utility;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace CodeFighter.Logic.Parts
 {
@@ -30,6 +31,8 @@ namespace CodeFighter.Logic.Parts
         public string DamageType { get; private set; }
         public string FiringType { get; private set; }
         public double Range { get; private set; }
+        public bool IsPointDefense { get; private set; }
+        public bool HasFiredThisRound { get; private set; }
         #endregion
 
         #region Public Methods
@@ -91,6 +94,7 @@ namespace CodeFighter.Logic.Parts
                 else
                     result.Add(string.Format("{0} Missed!", this.Name));
             }
+            this.HasFiredThisRound = true;
 
             return result;
         }
@@ -107,10 +111,30 @@ namespace CodeFighter.Logic.Parts
                 return 0;
         }
 
+        public override object Clone()
+        {
+            WeaponPart copy = new WeaponPart();
+            copy.Name = (string)this.Name.Clone();
+            copy.HP = (StatWithMax)this.HP.Clone();
+            copy.IsDestroyed = this.IsDestroyed;
+            copy.Target = (Ship)this.Target.Clone();
+            copy.Mass = this.Mass;
+            copy.Actions = (List<BaseAction>)this.Actions.Clone();
+            copy.currentReload = this.currentReload;
+            copy.WeaponDamage = this.WeaponDamage;
+            copy.CritMultiplier = this.CritMultiplier;
+            copy.ReloadTime = this.ReloadTime;
+            copy.DamageType = (string)this.DamageType.Clone();
+            copy.FiringType = (string)this.FiringType.Clone();
+            copy.Range = this.Range;
+            copy.IsPointDefense = this.IsPointDefense;
+            return copy;
+        }
+
         #endregion
 
         #region Constructors
-        public WeaponPart(string name, int maxHP, double mass, List<BaseAction> actions, int damage, double range, string damageType, string firingType, int critMultiplier, int reloadTime)
+        public WeaponPart(string name, int maxHP, double mass, List<BaseAction> actions, int damage, double range, string damageType, string firingType, int critMultiplier, int reloadTime, bool pointDefense)
             : base(name, maxHP, mass, actions)
         {
             this.WeaponDamage = damage;
@@ -118,8 +142,9 @@ namespace CodeFighter.Logic.Parts
             this.FiringType = firingType;
             this.CritMultiplier = critMultiplier;
             this.ReloadTime = reloadTime;
+            this.IsPointDefense = pointDefense;
         }
-
+        private WeaponPart() : base() { }
         #endregion
 
 

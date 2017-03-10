@@ -1,15 +1,18 @@
 ﻿using CodeFighter.Logic.Animations;
 using CodeFighter.Logic.Parts;
 using CodeFighter.Logic.Ships;
+using CodeFighter.Logic.Utility;
+using System;
 using System.Collections.Generic;
 
 namespace CodeFighter.Logic.Actions
 {
-    public abstract class BaseAction
+    public abstract class BaseAction : ICloneable
     {
         public BasePart TargetPart { get; set; }
         public Ship TargetShip { get; set; }
-        public Dictionary<string,object> ActionValues { get; set; }
+        public CloneableDictionary<string,object> ActionValues { get; set; }
         public abstract Animation DoAction();
+        public abstract object Clone();
     }
 }

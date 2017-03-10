@@ -38,19 +38,31 @@ namespace CodeFighter.Logic.Actions
         {
             return string.Format("Repair target Ship  for {0} HPs, 50% chance to repair Parts", ((int)ActionValues["RepairAmount"]).ToString());
         }
+
+        public override object Clone()
+        {
+            RepairShip copy = new RepairShip();
+            copy.TargetPart = (BasePart)this.TargetPart?.Clone();
+            copy.TargetShip = (Ship)this.TargetShip?.Clone();
+            copy.ActionValues = (CloneableDictionary<string, object>)this.ActionValues.Clone();
+            return copy;
+
+        }
         #endregion
 
         #region Constructors
+        private RepairShip() : base() { }
         public RepairShip(Ship targetShip, int amount)
         {
             this.TargetShip = targetShip;
+            this.ActionValues = new CloneableDictionary<string, object>();
             this.ActionValues["RepairAmount"] = amount;
         }
         /// <summary>
         /// Instantiates RepairTargetEidos with specified ActionValues.
         /// </summary>
         /// <param name="ActionValues">ActionValues[0] will be cast to int as the amount to repair</param>
-        public RepairShip(Ship targetShip, Dictionary<string,object> actionValues)
+        public RepairShip(Ship targetShip, CloneableDictionary<string,object> actionValues)
         {
             this.TargetShip = targetShip;
             this.ActionValues = actionValues;

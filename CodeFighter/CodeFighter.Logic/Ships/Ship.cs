@@ -19,7 +19,7 @@ namespace CodeFighter.Logic.Ships
 
     public delegate void ShipDestroyedEvent(object sender, ShipEventArgs e);
 
-    public class Ship
+    public class Ship : ICloneable
     {
         #region Properties
         public int ID { get; set; }
@@ -30,7 +30,7 @@ namespace CodeFighter.Logic.Ships
         public Point Position { get; set; }
         public ShipHull Hull { get; set; }
         public StatWithMax HP { get { return this.Hull.HullPoints; } set { this.Hull.HullPoints = value; } }
-        public StatWithMax MP { get; set; }
+        public StatWithMax MP { get; private set; }
         public double TotalMass
         {
             get
@@ -66,6 +66,27 @@ namespace CodeFighter.Logic.Ships
 
                 return Convert.ToInt32(Math.Round(MP));
             }
+        }
+        // not sure how to calculate this yet
+        public int Initiative { get { return 1; } }
+        #endregion
+
+        #region Constructor
+        private Ship()
+        {
+
+        }
+        public Ship(int id, string name, Player owner, ShipHull hull, List<BasePart> parts, Point originPosition)
+        {
+            this.ID = id;
+            this.Name = name;
+            this.Owner = owner;
+            this.Hull = hull;
+            this.Parts = parts;
+            this.Position = originPosition;
+
+            this.IsDestroyed = false;
+            this.MP = new StatWithMax(MaxMP);
         }
         #endregion
 
@@ -156,6 +177,20 @@ namespace CodeFighter.Logic.Ships
             }
 
             return result;
+        }
+
+        public object Clone()
+        {
+            Ship copy = new Ship();
+            copy.ID = this.ID;
+            copy.Name = (string)this.Name.Clone();
+            copy.IsDestroyed = this.IsDestroyed;
+            copy.Owner = (Player)this.Owner.Clone();
+            copy.Parts = (List<BasePart>)Parts.Clone();
+            copy.Position = this.Position;
+            copy.Hull = (ShipHull)this.Hull.Clone();
+            copy.MP = (StatWithMax)this.MP.Clone();
+            return copy;
         }
 
         #endregion

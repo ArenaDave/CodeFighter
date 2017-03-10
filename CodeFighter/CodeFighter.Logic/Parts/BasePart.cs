@@ -2,17 +2,18 @@
 using CodeFighter.Logic.Animations;
 using CodeFighter.Logic.Ships;
 using CodeFighter.Logic.Utility;
+using System;
 using System.Collections.Generic;
 
 namespace CodeFighter.Logic.Parts
 {
-    public abstract class BasePart
+    public abstract class BasePart : ICloneable
     {
         public string Name { get; set; }
         public StatWithMax HP { get; set; }
         public bool IsDestroyed { get; set; }
         public Ship Target { get; set; }
-        public double Mass { get; private set; }
+        public double Mass { get; protected set; }
         public List<BaseAction> Actions { get; set; }
 
         #region Abstract Methods
@@ -70,5 +71,8 @@ namespace CodeFighter.Logic.Parts
 
             return result;
         }
+
+        protected BasePart() { }
+        public abstract object Clone();
     }
 }

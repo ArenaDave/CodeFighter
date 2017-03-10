@@ -1,4 +1,6 @@
 ﻿using CodeFighter.Logic.Actions;
+using CodeFighter.Logic.Ships;
+using CodeFighter.Logic.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +20,21 @@ namespace CodeFighter.Logic.Parts
         {
             return string.Format("{0} ({1})", this.Name, Description);
         }
+
+        public override object Clone()
+        {
+            ActionPart copy = new ActionPart();
+            copy.Name = (string)this.Name.Clone();
+            copy.HP = (StatWithMax)this.HP.Clone();
+            copy.IsDestroyed = this.IsDestroyed;
+            copy.Target = (Ship)this.Target.Clone();
+            copy.Mass = this.Mass;
+            copy.Actions = (List<BaseAction>)this.Actions.Clone();
+            copy.Description = (string)this.Description.Clone();
+            return copy;
+        }
         #endregion
-        
+
         #region Constructors
         public ActionPart(string name, int maxHP, double mass, string actionDescription, List<BaseAction> actions)
             : base(name,maxHP,mass,actions)
@@ -27,8 +42,12 @@ namespace CodeFighter.Logic.Parts
             Description = actionDescription;
             
         }
-        
+
+        private ActionPart():base() { }
         #endregion
+
+        
+
 
     }
 }
