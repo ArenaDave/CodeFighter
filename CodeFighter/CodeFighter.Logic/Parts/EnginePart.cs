@@ -18,6 +18,7 @@ namespace CodeFighter.Logic.Parts
         public override object Clone()
         {
             EnginePart copy = new EnginePart();
+            copy.partID = this.partID;
             copy.Name = (string)this.Name.Clone();
             copy.HP = (StatWithMax)this.HP.Clone();
             copy.IsDestroyed = this.IsDestroyed;

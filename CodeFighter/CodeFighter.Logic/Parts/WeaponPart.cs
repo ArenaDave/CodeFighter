@@ -114,6 +114,7 @@ namespace CodeFighter.Logic.Parts
         public override object Clone()
         {
             WeaponPart copy = new WeaponPart();
+            copy.partID = this.partID;
             copy.Name = (string)this.Name.Clone();
             copy.HP = (StatWithMax)this.HP.Clone();
             copy.IsDestroyed = this.IsDestroyed;
@@ -128,6 +129,7 @@ namespace CodeFighter.Logic.Parts
             copy.FiringType = (string)this.FiringType.Clone();
             copy.Range = this.Range;
             copy.IsPointDefense = this.IsPointDefense;
+            copy.HasFiredThisRound = this.HasFiredThisRound;
             return copy;
         }
 

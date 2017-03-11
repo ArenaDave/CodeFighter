@@ -9,6 +9,16 @@ namespace CodeFighter.Logic.Parts
 {
     public abstract class BasePart : ICloneable
     {
+        protected Guid partID;
+
+        public Guid PartID
+        {
+            get { if (partID == Guid.Empty)
+                    partID = Guid.NewGuid();
+                return partID; }
+            set { partID = value; }
+        }
+
         public string Name { get; set; }
         public StatWithMax HP { get; set; }
         public bool IsDestroyed { get; set; }

@@ -69,6 +69,7 @@ namespace CodeFighter.Logic.Parts
         public override object Clone()
         {
             DefensePart copy = new DefensePart();
+            copy.partID = this.partID;
             copy.Name = (string)this.Name.Clone();
             copy.HP = (StatWithMax)this.HP.Clone();
             copy.IsDestroyed = this.IsDestroyed;
