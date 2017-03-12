@@ -52,6 +52,9 @@
     <Compile Include="Animations\AnimationShootingDetails.cs" />
     <Compile Include="Animations\AnimationShotDetails.cs" />
     <Compile Include="Animations\IAnimationDetails.cs" />
+    <Compile Include="Orders\BaseOrder.cs" />
+    <Compile Include="Orders\FireWeaponOrder.cs" />
+    <Compile Include="Orders\MoveOrder.cs" />
     <Compile Include="Parts\ActionPart.cs" />
     <Compile Include="Parts\BasePart.cs" />
     <Compile Include="Parts\DefensePart.cs" />
@@ -67,6 +70,7 @@
     <Compile Include="Ships\Ship.cs" />
     <Compile Include="Ships\ShipHull.cs" />
     <Compile Include="Simulations\Simulation.cs" />
+    <Compile Include="Utility\AttackResult.cs" />
     <Compile Include="Utility\CloneableDictionary.cs" />
     <Compile Include="Utility\DamageTypes.cs" />
     <Compile Include="Utility\DefenseResult.cs" />

@@ -54,7 +54,7 @@ namespace CodeFighter.Logic.Parts
         /// Fires the weapon at its existing target with a fixed 90% hit 5% crit chance
         /// </summary>
         /// <returns>Status result</returns>
-        public List<string> Fire()
+        public AttackResult Fire()
         {
             return Fire(11, 96); // 10% miss, 5% crit
         }
@@ -64,10 +64,11 @@ namespace CodeFighter.Logic.Parts
         /// <param name="hitAbove">Minimum number needed (out of 100) to hit the target</param>
         /// <param name="critAbove">Minimum number needed (out of 100) to critically-hit the target</param>
         /// <returns>Status result</returns>
-        public List<string> Fire(int hitAbove, int critAbove)
+        public AttackResult Fire(int hitAbove, int critAbove)
         {
             Ship targetShip = (Ship)Target;
-            List<string> result = new List<string>();
+            AttackResult result = new AttackResult();
+            List<string> messages = new List<string>();
             currentReload = ReloadTime;
             using (RNG rng = new RNG())
             {
@@ -75,27 +76,36 @@ namespace CodeFighter.Logic.Parts
 
                 if (hitNum >= critAbove)
                 {
-                    result.Add(string.Format("{0} CRITS {1} for {2}",
+                    messages.Add(string.Format("{0} CRITS {1} for {2}",
                         this.Name,
                         targetShip.Name,
                         this.WeaponDamage
                         ));
-                    result = result.Concat(targetShip.HitFor(WeaponDamage * CritMultiplier, DamageType)).ToList<string>();
+                    messages = messages.Concat(targetShip.HitFor(WeaponDamage * CritMultiplier, DamageType)).ToList<string>();
+                    result.IsHit = true;
+                    result.IsCrit = true;
                 }
                 else if (hitNum >= hitAbove)
                 {
-                    result.Add(string.Format("{0} hits {1} for {2}",
+                    messages.Add(string.Format("{0} hits {1} for {2}",
                         this.Name,
                         targetShip.Name,
                         this.WeaponDamage
                         ));
-                    result = result.Concat(targetShip.HitFor(WeaponDamage, DamageType)).ToList<string>();
+                    messages = messages.Concat(targetShip.HitFor(WeaponDamage, DamageType)).ToList<string>();
+                    result.IsCrit = false;
+                    result.IsHit = true;
                 }
                 else
-                    result.Add(string.Format("{0} Missed!", this.Name));
+                {
+                    messages.Add(string.Format("{0} Missed!", this.Name));
+                    result.IsHit = false;
+                    result.IsCrit = false;
+                }
             }
             this.HasFiredThisRound = true;
 
+            result.Messages = messages;
             return result;
         }
 

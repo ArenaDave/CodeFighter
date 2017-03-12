@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CodeFighter.Logic.Orders;
+using CodeFighter.Logic.Scenarios;
+using CodeFighter.Logic.Ships;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +11,12 @@ namespace CodeFighter.Logic.Players
 {
     public class EnemyLogic
     {
+        public List<BaseOrder> GetOrders(List<Ship> ships, List<ScenarioFeature> features)
+        {
+            List<BaseOrder> results = new List<BaseOrder>();
+            // TODO: add AI here
 
+            return results;
+        }
     }
 }

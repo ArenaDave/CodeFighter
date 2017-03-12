@@ -1,4 +1,5 @@
-﻿using CodeFighter.Logic.Parts;
+﻿using CodeFighter.Logic.Animations;
+using CodeFighter.Logic.Parts;
 using CodeFighter.Logic.Players;
 using CodeFighter.Logic.Utility;
 using System;
@@ -7,13 +8,14 @@ using System.Linq;
 
 namespace CodeFighter.Logic.Ships
 {
-    public class ShipEventArgs : EventArgs
+    public class ShipEventArgs : MessageEventArgs
     {
-        public Ship Ship { get; set; }
+        public int ShipID { get; set; }
 
-        public ShipEventArgs(Ship ship)
+        public ShipEventArgs(int shipId, List<string> messages)
+            : base(messages)
         {
-            this.Ship = ship;
+            this.ShipID = shipId;
         }
     }
 
@@ -90,7 +92,7 @@ namespace CodeFighter.Logic.Ships
         }
         #endregion
 
-        public dynamic GameLogic;
+        public dynamic GameLogic { get; internal set; }
 
         public override string ToString()
         {
@@ -171,7 +173,7 @@ namespace CodeFighter.Logic.Ships
                 // oh no, we died!
                 if (HP.Current <= 0)
                 {
-                    OnShipDestroyed?.Invoke(this, new ShipEventArgs(this));
+                    OnShipDestroyed?.Invoke(this, new ShipEventArgs(this.ID, new List<string>() { string.Format("{0} was destroyed by this attack!", this.ToString()) }));
                     IsDestroyed = true;
                 }
             }

@@ -1,4 +1,7 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace CodeFighter.Logic.Utility
 {
@@ -72,6 +75,21 @@ namespace CodeFighter.Logic.Utility
             X += dx;
             Y += dy;
         }
+
+        internal bool IsAdjacent(Point targetPosition)
+        {
+            List<Point> adjacents = new List<Point>();
+            for (int x = -1; x < 2; x++)
+            {
+                for (int y = -1; y < 2; y++)
+                {
+                    if(!(x==0 && y==0 ))
+                        adjacents.Add(new Point(X + x, Y + y));
+                }
+            }
+            return adjacents.Any(x => x == targetPosition);
+        }
+
         public void Offset(Point p)
         {
             Offset(p.X, p.Y);
