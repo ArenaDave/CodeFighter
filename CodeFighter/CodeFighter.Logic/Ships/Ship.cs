@@ -56,10 +56,11 @@ namespace CodeFighter.Logic.Ships
             {
                 // diminishing returns function of mass versus thrust
                 double totalThrust = 0;
-                foreach (EnginePart part in Parts.Where(x => x is EnginePart))
-                {
-                    totalThrust += part.Thrust;
-                }
+                if (Parts != null)
+                    foreach (EnginePart part in Parts.Where(x => x is EnginePart))
+                    {
+                        totalThrust += part.Thrust;
+                    }
                 if (totalThrust <= 0)
                     return 0;
 
@@ -195,7 +196,7 @@ namespace CodeFighter.Logic.Ships
             copy.MP = (StatWithMax)this.MP.Clone();
             return copy;
         }
-        
+
         public List<Animation> EndOfTurn()
         {
             List<Animation> result = new List<Animation>();
@@ -203,18 +204,18 @@ namespace CodeFighter.Logic.Ships
 
             this.MP.Max = this.MaxMP;
             this.MP.Current = this.MP.Max;
-            
+
             //Process Actions
             foreach (BasePart part in Parts.Where(x => !x.IsDestroyed))
             {
                 result.AddRange(part.DoAction(this));
             }
-            
+
             // clean up weapons
-            foreach(WeaponPart weapon in Parts.Where(x=>x is WeaponPart && !x.IsDestroyed))
+            foreach (WeaponPart weapon in Parts.Where(x => x is WeaponPart && !x.IsDestroyed))
             {
                 if (weapon.ReloadTime > 0)
-                    result.Add(new Animation(AnimationActionType.Message,null,new List<string>() { string.Format("{0} will be reloaded in {1} turns", weapon.Name, weapon.Reload()) }));
+                    result.Add(new Animation(AnimationActionType.Message, null, new List<string>() { string.Format("{0} will be reloaded in {1} turns", weapon.Name, weapon.Reload()) }));
                 weapon.EndOfTurn();
             }
 

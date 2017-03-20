@@ -87,6 +87,12 @@ namespace CodeFighter.Logic.Simulations
 
             bool continueRunning = true;
             int roundCounter = 1;
+            
+            // reset all ships
+            foreach (Ship ship in Ships)
+            {
+                ship.EndOfTurn();
+            }
 
             // loop through rounds
             while (continueRunning)
