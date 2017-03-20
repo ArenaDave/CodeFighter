@@ -1,6 +1,7 @@
 ﻿using CodeFighter.Logic.Animations;
 using CodeFighter.Logic.Parts;
 using CodeFighter.Logic.Players;
+using CodeFighter.Logic.Simulations;
 using CodeFighter.Logic.Utility;
 using System;
 using System.Collections.Generic;
@@ -92,7 +93,7 @@ namespace CodeFighter.Logic.Ships
         }
         #endregion
 
-        public dynamic GameLogic { get; internal set; }
+        public IGameLogic GameLogic { get; internal set; }
 
         public override string ToString()
         {
@@ -194,7 +195,33 @@ namespace CodeFighter.Logic.Ships
             copy.MP = (StatWithMax)this.MP.Clone();
             return copy;
         }
+        
+        public List<Animation> EndOfTurn()
+        {
+            List<Animation> result = new List<Animation>();
+            result.Add(new Animation(AnimationActionType.Message, null, new List<string>() { string.Format("Resolving End-of-Turn for {0}", this.ToString()) }));
 
+            this.MP.Max = this.MaxMP;
+            this.MP.Current = this.MP.Max;
+            
+            //Process Actions
+            foreach (BasePart part in Parts.Where(x => !x.IsDestroyed))
+            {
+                result.AddRange(part.DoAction(this));
+            }
+            
+            // clean up weapons
+            foreach(WeaponPart weapon in Parts.Where(x=>x is WeaponPart && !x.IsDestroyed))
+            {
+                if (weapon.ReloadTime > 0)
+                    result.Add(new Animation(AnimationActionType.Message,null,new List<string>() { string.Format("{0} will be reloaded in {1} turns", weapon.Name, weapon.Reload()) }));
+                weapon.EndOfTurn();
+            }
+
+            return result;
+
+
+        }
         #endregion
 
     }

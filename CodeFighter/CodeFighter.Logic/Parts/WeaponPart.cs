@@ -113,12 +113,17 @@ namespace CodeFighter.Logic.Parts
         /// Reduces the reload counter for the weapon
         /// </summary>
         /// <returns>Number of turns remaining until the weapon is reloaded</returns>
-        public int Reload()
+        internal int Reload()
         {
             if (currentReload > 0)
                 return currentReload--;
             else
                 return 0;
+        }
+
+        internal void EndOfTurn()
+        {
+            this.HasFiredThisRound = false;
         }
 
         public override object Clone()

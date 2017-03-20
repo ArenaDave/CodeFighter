@@ -90,6 +90,13 @@ namespace CodeFighter.Logic.Utility
             return adjacents.Any(x => x == targetPosition);
         }
 
+        internal double DistanceTo(Point targetPosition)
+        {
+            double sqrX = Math.Pow(this.X - targetPosition.X, 2);
+            double sqrY = Math.Pow(this.Y - targetPosition.Y, 2);
+            return Math.Sqrt(sqrX + sqrY);
+        }
+
         public void Offset(Point p)
         {
             Offset(p.X, p.Y);

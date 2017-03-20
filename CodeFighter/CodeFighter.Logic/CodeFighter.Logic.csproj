@@ -69,12 +69,15 @@
     <Compile Include="Ships\HullSize.cs" />
     <Compile Include="Ships\Ship.cs" />
     <Compile Include="Ships\ShipHull.cs" />
+    <Compile Include="Simulations\IGameLogic.cs" />
     <Compile Include="Simulations\Simulation.cs" />
     <Compile Include="Utility\AttackResult.cs" />
     <Compile Include="Utility\CloneableDictionary.cs" />
     <Compile Include="Utility\DamageTypes.cs" />
     <Compile Include="Utility\DefenseResult.cs" />
     <Compile Include="Utility\Extensions.cs" />
+    <Compile Include="Utility\Node.cs" />
+    <Compile Include="Utility\Pathing.cs" />
     <Compile Include="Utility\Point.cs" />
     <Compile Include="Utility\RNG.cs" />
     <Compile Include="Utility\Size.cs" />

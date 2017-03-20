@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace CodeFighter.Logic.Simulations
 {
-    internal class Simulation
+    public class Simulation
     {
 
         Player enemyPlayer;
@@ -106,7 +106,7 @@ namespace CodeFighter.Logic.Simulations
                         foreach (Ship currentShip in shipsAtInitiative.Where(x => x.MP.Current > 0))
                         {
                             // TODO: activate AI
-                            List<BaseOrder> orders = currentShip.GameLogic.GetOrders(Ships.Clone(), Features.Clone());
+                            List<BaseOrder> orders = currentShip.GameLogic.GetOrders(currentShip, Ships.Clone(), Features.Clone());
 
                             // hookup handlers
                             currentShip.OnShipDestroyed -= new ShipDestroyedEvent(ShipDestroyedHandler);
@@ -135,7 +135,7 @@ namespace CodeFighter.Logic.Simulations
                         foreach (Ship currentShip in shipsNotAtInitiative.Where(x => x.Parts.Any(p => p is WeaponPart && ((WeaponPart)p).IsPointDefense && !((WeaponPart)p).HasFiredThisRound)))
                         {
                             // TODO: activate AI code to check for Point Defense weapon actions
-                            List<BaseOrder> orders = currentShip.GameLogic.GetOrders(Ships.Clone(), Features.Clone());
+                            List<BaseOrder> orders = currentShip.GameLogic.GetOrders(currentShip, Ships.Clone(), Features.Clone());
 
                             // hookup handlers
                             currentShip.OnShipDestroyed -= new ShipDestroyedEvent(ShipDestroyedHandler);
@@ -184,6 +184,10 @@ namespace CodeFighter.Logic.Simulations
                 else
                 {
                     roundCounter++;
+                    foreach(Ship ship in Ships)
+                    {
+                        results.AddRange(ship.EndOfTurn());
+                    }
                 }
             }
             // return animations

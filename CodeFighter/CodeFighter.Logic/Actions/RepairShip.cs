@@ -31,7 +31,7 @@ namespace CodeFighter.Logic.Actions
             if (repaired.Count > 0)
                 result = result + string.Format(", and Repaired {0}", string.Join(", ", repaired.ToArray()));
 
-            return new Animation(AnimationActionType.Message,null, result);
+            return new Animation(AnimationActionType.Message,null, new List<string>() { result });
         }
         
         public override string ToString()

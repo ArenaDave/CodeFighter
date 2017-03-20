@@ -69,9 +69,7 @@ namespace CodeFighter.Logic.Orders
             }
             else
             {
-                double sqrX = Math.Pow(CurrentShip.Position.X - TargetShip.Position.X, 2);
-                double sqrY = Math.Pow(CurrentShip.Position.Y - TargetShip.Position.Y, 2);
-                double distanceToTarget = Math.Sqrt(sqrX + sqrY);
+                double distanceToTarget = CurrentShip.Position.DistanceTo(TargetShip.Position);
                 
                 if (distanceToTarget >= WeaponToFire.Range + 1) // target out of range
                 {
