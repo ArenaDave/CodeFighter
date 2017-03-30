@@ -73,7 +73,7 @@ namespace CodeFighter.Logic.Parts
             copy.Name = (string)this.Name.Clone();
             copy.HP = (StatWithMax)this.HP.Clone();
             copy.IsDestroyed = this.IsDestroyed;
-            copy.Target = (Ship)this.Target.Clone();
+            //copy.Target = (Ship)this.Target.Clone();
             copy.Mass = this.Mass;
             copy.Actions = (List<BaseAction>)this.Actions.Clone();
             copy.DR = this.DR;

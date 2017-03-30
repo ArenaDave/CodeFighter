@@ -37,5 +37,31 @@ namespace CodeFighter.Logic.Players
         {
             this.IsAI = isAI;
         }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Player)
+            {
+                if (((Player)obj).ID == this.ID)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return ID;
+        }
+
+        public static bool operator ==(Player left, Player right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Player left, Player right)
+        {
+            return !(left == right);
+        }
     }
 }

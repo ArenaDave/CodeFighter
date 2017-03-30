@@ -11,5 +11,6 @@ namespace CodeFighter.Logic.Utility
         public List<string> Messages = new List<string>();
         public bool IsHit;
         public bool IsCrit;
+        public bool TargetDestroyed;
     }
 }

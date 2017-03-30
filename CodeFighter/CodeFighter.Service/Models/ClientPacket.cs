@@ -10,5 +10,7 @@ namespace CodeFighter.Models
         public Guid ScenarioID { get; set; }
         public Guid PlayerID { get; set; }
         public string PlayerCode { get; set; }
+
+        public List<string> messages { get; set; }
     }
 }

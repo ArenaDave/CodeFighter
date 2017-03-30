@@ -21,7 +21,10 @@ namespace CodeFighter.Controllers
         [System.Web.Http.HttpGet]
         public ActionResult Get()
         {
-            return new JsonResult() { Data = new ClientPacket() };
+            List<string> test = new List<string>();
+            test.Add("one");
+            test.Add("two");
+            return new JsonResult() { Data = new ClientPacket() { messages = test } };
         }
 
         #endregion
@@ -48,7 +51,9 @@ namespace CodeFighter.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, ex.ToString());
+                List<Animation> results = new List<Animation>();
+                results.Add(new Animation(AnimationActionType.Message, null, new List<string>() { ex.ToString() }));
+                return new JsonResult() { Data = results };
             }
         }
 
@@ -145,7 +150,7 @@ namespace CodeFighter.Controllers
 
         private Player getPlayer(Guid playerID)
         {
-            return new Player();
+            return new Player() { Name = "Bob" };
         }
     }
 }

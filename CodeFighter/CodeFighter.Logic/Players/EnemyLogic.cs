@@ -31,18 +31,18 @@ namespace CodeFighter.Logic.Players
             Point centerPoint = new Point(centerX, centerY);
 
             // sort ships by owner and distance from center.
-            List<Ship> enemyShips = new List<Ship>();
-            List<Ship> playerShips = new List<Ship>();
+            List<Ship> myShips = new List<Ship>();
+            List<Ship> theirShips = new List<Ship>();
 
             foreach (Ship ship in ships.OrderBy(x => x.Position.DistanceTo(centerPoint)))
             {
-                if (ship.Owner.IsAI)
+                if (ship.Owner == currentShip.Owner)
                 {
-                    enemyShips.Add(ship);
+                    myShips.Add(ship);
                 }
                 else
                 {
-                    playerShips.Add(ship);
+                    theirShips.Add(ship);
                 }
             }
 
@@ -59,7 +59,7 @@ namespace CodeFighter.Logic.Players
 
             List<Ship> targettedShips = new List<Ship>();
 
-            foreach (Ship ship in enemyShips)
+            foreach (Ship ship in myShips)
             {
                 // get a new target?
                 if (newTarget)
@@ -70,7 +70,7 @@ namespace CodeFighter.Logic.Players
                     ourLifespan = 0;
                     killRatio = 0;
 
-                    targetShip = playerShips
+                    targetShip = theirShips
                         .OrderBy(x => x.Position.DistanceTo(ship.Position))
                         .FirstOrDefault(x => !targettedShips.Contains(x));
                     if (targetShip != null)
@@ -109,7 +109,7 @@ namespace CodeFighter.Logic.Players
 
                     if (ship.ID == currentShip.ID)
                     {
-                        return issueOrders(ship, targetShip);
+                        return issueOrders(currentShip, targetShip);
                     }
 
                 }
@@ -118,7 +118,8 @@ namespace CodeFighter.Logic.Players
 
 
             // add default actions (pick closest target and issue orders for it)
-            Ship finalTarget = ships.OrderBy(x => x.Position.DistanceTo(currentShip.Position)).First();
+            Point currentShipPosition = currentShip.Position;
+            Ship finalTarget = ships.OrderBy(x => x.Position.DistanceTo(currentShipPosition)).First();
             return issueOrders(currentShip, finalTarget);
         }
 
@@ -144,7 +145,7 @@ namespace CodeFighter.Logic.Players
             // if any weapon is in range and reloaded, attack the target ship
             foreach (WeaponPart weapon in currentShip.Parts.Where(x => x is WeaponPart && !x.IsDestroyed))
             {
-                if (weapon.Range <= currentShip.Position.DistanceTo(targetShip.Position)
+                if (weapon.Range >= currentShip.Position.DistanceTo(targetShip.Position)
                     && weapon.IsLoaded
                     && !weapon.HasFiredThisRound)
                 {

@@ -42,8 +42,8 @@ namespace CodeFighter.Logic.Actions
         public override object Clone()
         {
             RepairShip copy = new RepairShip();
-            copy.TargetPart = (BasePart)this.TargetPart?.Clone();
-            copy.TargetShip = (Ship)this.TargetShip?.Clone();
+            //copy.TargetPart = (BasePart)this.TargetPart?.Clone();
+            //copy.TargetShip = (Ship)this.TargetShip?.Clone();
             copy.ActionValues = (CloneableDictionary<string, object>)this.ActionValues.Clone();
             return copy;
 

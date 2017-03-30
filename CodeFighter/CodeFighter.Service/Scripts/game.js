@@ -24,13 +24,13 @@ var beamShots = [];
 var explosions = [];
 
 // magic number for ship movement speed
-var shipSpeed = 32;
+var shipSpeed = 64;
 
 // magic numbers for beam weapon animations
 var rndBeamDeviation = 10;
-var defaultBeamDuration = 0.4;
-var defaultBeamRenderDelay = 0.3;
-var beamRenderDelayMaxRange = 0.3;
+var defaultBeamDuration = 0.2;
+var defaultBeamRenderDelay = 0.1;
+var beamRenderDelayMaxRange = 0.1;
 var beamMissThickness = 1;
 var beamHitThickness = 2;
 var beamCritThickness = 3;
@@ -83,20 +83,23 @@ function start() {
     startGame();
     // hide the start button
     var startButton = document.getElementById("btnStart");
-    startButton.className += "hidden";
+    startButton.className += " hidden";
     // show the pause button
     var pauseButton = document.getElementById("btnPause");
-    pauseButton.className = pauseButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
+    pauseButton.className = pauseButton.className.replace(/(?:^|\s) ?hidden(?!\S)/g, '');
+    // show the loader
+    var loader = document.getElementById("loader");
+    loader.className = loader.className.replace(/(?:^|\s) ?hidden(?!\S)/g, '');
 }
 function pause() {
     // pause the game (rendering keeps going, need to fix this to actually pause the entire loop for performance)
     keepGoing = false;
     // hide the pause button
     var pauseButton = document.getElementById("btnPause");
-    pauseButton.className += "hidden";
+    pauseButton.className += " hidden";
     // show the resume button
     var resumeButton = document.getElementById("btnResume");
-    resumeButton.className = resumeButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
+    resumeButton.className = resumeButton.className.replace(/(?:^|\s) ?hidden(?!\S)/g, '');
 }
 function resume() {
     // reset the last time (or else it will skip a lot of frames) and resume the loop
@@ -104,26 +107,26 @@ function resume() {
     keepGoing = true;
     // hide the resume button
     var resumeButton = document.getElementById("btnResume");
-    resumeButton.className += "hidden";
+    resumeButton.className += " hidden";
     // show the pause button
     var pauseButton = document.getElementById("btnPause");
-    pauseButton.className = pauseButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
+    pauseButton.className = pauseButton.className.replace(/(?:^|\s) ?hidden(?!\S)/g, '');
 }
 function resetButtons() {
     // hide the resume button
-    if (!document.getElementById("btnResume").className.match(/(?:^|\s)hidden(?!\S)/)) {
+    if (!document.getElementById("btnResume").className.match(/(?:^|\s) ?hidden(?!\S)/)) {
         var resumeButton = document.getElementById("btnResume");
-        resumeButton.className += "hidden";
+        resumeButton.className += " hidden";
     }
     // hide the pause button
-    if (!document.getElementById("btnPause").className.match(/(?:^|\s)hidden(?!\S)/)) {
+    if (!document.getElementById("btnPause").className.match(/(?:^|\s) ?hidden(?!\S)/)) {
         var pauseButton = document.getElementById("btnPause");
-        pauseButton.className += "hidden";
+        pauseButton.className += " hidden";
     }
     // show the start button
-    if (document.getElementById("btnStart").className.match(/(?:^|\s)hidden(?!\S)/)) {
+    if (document.getElementById("btnStart").className.match(/(?:^|\s) ?hidden(?!\S)/)) {
         var startButton = document.getElementById("btnStart");
-        startButton.className = startButton.className.replace(/(?:^|\s)hidden(?!\S)/g, '');
+        startButton.className = startButton.className.replace(/(?:^|\s) ?hidden(?!\S)/g, '');
     }
     // stop the loop
     keepGoing = false;
@@ -179,6 +182,9 @@ function getActions() {
     // TODO: add error handling for error results
     http.onreadystatechange = function () {
         if (http.readyState == 4 && http.status == 200) {
+            // hide the loader
+            var loader = document.getElementById("loader");
+            loader.className += " hidden";
             actions = JSON.parse(http.responseText).Data;
             gameLoop();
         }
@@ -196,48 +202,85 @@ function beginNextAction() {
     }
     // grab action at index == 0 (and remove from array)
     var action = actions.shift();
-    if (action.actionType == 'add') {
+    if (action.actionType == 'message') {
+        var messages = action.messages;
+        addMessages(messages);
+    }
+    else if (action.actionType == 'add') {
         var shipID = action.details.id;
         var startingPosition = [action.details.x, action.details.y];
         var sizeCategory = action.details.sizeCategory;
         var isEnemy = action.details.isEnemy;
         addShip(shipID, startingPosition, sizeCategory, isEnemy);
+        var messages = action.messages;
+        addMessages(messages);
     }
     else if (action.actionType == 'kill') {
         var shipID = action.details.id;
         killShip(shipID);
+        var messages = action.messages;
+        addMessages(messages);
     }
     else if (action.actionType == 'explosion') {
         var position = [action.details.x, action.details.y];
         addExplosion(position);
+        var messages = action.messages;
+        addMessages(messages);
     }
     else if (action.actionType == 'shoot') {
         for (s in action.details.shots) {
-            // get origin ship position
-            var originShip = ships.filter(function (obj) { return obj.id == action.details.shots[s].origin; })[0];
-            var originPosition = originShip.pos;
-            
-            // get target ship position
-            var targetPosition = ships.filter(function (obj) { return obj.id == action.details.shots[s].target; })[0].pos;
-            
-            // check if origin is enemy ship
-            var isEnemy = originShip.isEnemy;
-            
-            var isHit = action.details.shots[s].isHit;
-            var isCrit = action.details.shots[s].isCrit;
-            addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit);
+            if (ships.filter(function (obj) { return obj.id == action.details.shots[s].target; }).length > 0
+                && ships.filter(function (obj) { return obj.id == action.details.shots[s].origin; }).length > 0) {
+                // get origin ship position
+                var test = ships.filter(function (obj) { return obj.id == action.details.shots[s].origin; });
+                var originShip = ships.filter(function (obj) { return obj.id == action.details.shots[s].origin; })[0];
+                var originPosition = originShip.pos;
+
+                // get target ship position
+                var targetPosition = ships.filter(function (obj) { return obj.id == action.details.shots[s].target; })[0].pos;
+
+                // check if origin is enemy ship
+                var isEnemy = originShip.isEnemy;
+
+                var isHit = action.details.shots[s].isHit;
+                var isCrit = action.details.shots[s].isCrit;
+                addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit);
+            }
+            else {
+                if (ships.filter(function (obj) { return obj.id == action.details.shots[s].target; }).length <= 0) {
+                    alert('Attempting to fire at invalid target: ' + action.details.shots[s].target);
+                }
+                if (ships.filter(function (obj) { return obj.id == action.details.shots[s].origin; }).length <= 0) {
+                    alert('Attempting to fire from invalid origin: ' + action.details.shots[s].origin);
+                }
+            }
         }
+        var messages = action.messages;
+        addMessages(messages);
     }
     else if (action.actionType == 'move') {
         var shipID = action.details.id;
+        if (ships.filter(function (obj) { return obj.id == shipID }).length <= 0) {
+            alert('Attempting to move invalid ship: ' + shipID);
+        }
         var targetPosition = [action.details.x, action.details.y];
         moveShip(shipID, targetPosition);
+        var messages = action.messages;
+        addMessages(messages);
     }
     // keep the game loop going
     return true;
 }
 
-
+function addMessages(messages) {
+    if (messages != null) {
+        for (var i = 0; i < messages.length; i++) {
+            var messageBox = document.getElementById('messageBox');
+            messageBox.innerHTML += "<br/>" + messages[i];
+            messageBox.scrollTop = messageBox.scrollHeight;
+        }
+    }
+}
 
 // GAME LOOP
 function startGame() {

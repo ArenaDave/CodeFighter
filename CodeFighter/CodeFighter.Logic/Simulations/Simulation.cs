@@ -29,6 +29,8 @@ namespace CodeFighter.Logic.Simulations
 
             // players
             enemyPlayer = new Player(true);
+            enemyPlayer.ID = -1;
+            enemyPlayer.Name = "Xorn";
             currentPlayer = player;
 
 
@@ -38,8 +40,8 @@ namespace CodeFighter.Logic.Simulations
 
             // ships
             // TODO: load from scenario
-            Ships.Add(getShip(currentPlayer, 0, "Iowa", "BB", 150, "UNSC Missouri", new Point(5, 5)));
-            Ships.Add(getShip(enemyPlayer, 1, "Bunker", "BB", 150, "Alpha-01", new Point(5, 5)));
+            Ships.Add(getShip(currentPlayer, 0, "Iowa", "BB", 40, "UNSC Missouri", new Point(5, 5)));
+            Ships.Add(getShip(enemyPlayer, 1, "Bunker", "BB", 40, "Alpha-01", new Point(20, 20)));
             // TODO: add Game Logic to player's ships
         }
 
@@ -76,7 +78,7 @@ namespace CodeFighter.Logic.Simulations
 
             //game logic
             ship.GameLogic = new EnemyLogic();
-
+            ship.Owner = currentPlayer;
             return ship;
         }
 
@@ -84,13 +86,15 @@ namespace CodeFighter.Logic.Simulations
         {
             // reset animations
             results = new List<Animation>();
-
+            
             bool continueRunning = true;
             int roundCounter = 1;
             
             // reset all ships
             foreach (Ship ship in Ships)
             {
+                // TODO: remove hard-coded size category
+                results.Add(new Animation(AnimationActionType.Add, new AnimationAddDetails(ship.ID, ship.Position, ship.Owner.IsAI, 2)));
                 ship.EndOfTurn();
             }
 
@@ -101,35 +105,59 @@ namespace CodeFighter.Logic.Simulations
                 for (int initiative = 50; initiative > 0; initiative--)
                 {
                     // get ships at this initiative
-                    List<Ship> shipsAtInitiative = Ships.Where(x => x.Initiative == initiative).ToList();
-                    List<Ship> shipsNotAtInitiative = Ships.Where(x => x.Initiative != initiative).ToList();
+                    List<Ship> shipsAtInitiative = Ships.Where(x => x.Initiative == initiative && !x.IsDestroyed).ToList();
+                    List<Ship> shipsNotAtInitiative = Ships.Where(x => x.Initiative != initiative && !x.IsDestroyed).ToList();
                     // shuffle the list
                     shipsAtInitiative.Shuffle();
                     // loop until no ships at this initiative have MP remaining.
-                    while (shipsAtInitiative.Any(x => x.MP.Current > 0))
+                    while (shipsAtInitiative.Any(x =>!x.IsDestroyed && x.MP.Current > 0) 
+                        && Ships.Any(x => !x.IsDestroyed && x.Owner == currentPlayer)
+                        && Ships.Any(x => !x.IsDestroyed && x.Owner == enemyPlayer))
                     {
                         // loop through each ship at this initiative that still have MP
-                        foreach (Ship currentShip in shipsAtInitiative.Where(x => x.MP.Current > 0))
+                        foreach (Ship currentShip in shipsAtInitiative.Where(x => x.MP.Current > 0 && !x.IsDestroyed))
                         {
                             // TODO: activate AI
-                            List<BaseOrder> orders = currentShip.GameLogic.GetOrders(currentShip, Ships.Clone(), Features.Clone());
+                            Ship currentShipRef = currentShip;
+                            List<BaseOrder> orders = currentShip.GameLogic.GetOrders(currentShipRef, Ships.Clone(), Features.Clone());
 
                             // hookup handlers
-                            currentShip.OnShipDestroyed -= new ShipDestroyedEvent(ShipDestroyedHandler);
-                            currentShip.OnShipDestroyed += new ShipDestroyedEvent(ShipDestroyedHandler);
                             foreach (FireWeaponOrder fwo in orders.Where(x => x is FireWeaponOrder))
                             {
                                 fwo.OnWeaponFired -= new WeaponFiredEvent(WeaponFiredHandler);
                                 fwo.OnWeaponFired += new WeaponFiredEvent(WeaponFiredHandler);
 
+                                fwo.OnTargetDestroyed -= new ShipDestroyedEvent(ShipDestroyedHandler);
+                                fwo.OnTargetDestroyed += new ShipDestroyedEvent(ShipDestroyedHandler);
+
                                 fwo.OnMessageResult -= new MessageEvent(MessageHandler);
                                 fwo.OnMessageResult += new MessageEvent(MessageHandler);
+                            }
+                            foreach(MoveOrder mo in orders.Where(x=>x is MoveOrder))
+                            {
+                                mo.OnShipMoved -= new ShipMovedEvent(MovedHandler);
+                                mo.OnShipMoved += new ShipMovedEvent(MovedHandler);
+
+                                mo.OnMessageResult -= new MessageEvent(MessageHandler);
+                                mo.OnMessageResult += new MessageEvent(MessageHandler);
                             }
 
                             // resolve orders
                             foreach (BaseOrder order in orders)
                             {
+                                if (!Ships.Any(x => !x.IsDestroyed && x.Owner == currentPlayer) || !Ships.Any(x => !x.IsDestroyed && x.Owner == enemyPlayer))
+                                    continue;
                                 order.Simulation = this;
+                                if (Ships.First(x => x.ID == order.CurrentShip.ID).IsDestroyed)
+                                    continue;
+                                order.CurrentShip = Ships.First(x => x.ID == order.CurrentShip.ID);
+                                if(order is FireWeaponOrder)
+                                {
+                                    FireWeaponOrder fwo = (FireWeaponOrder)order;
+                                    if (Ships.First(x => x.ID == fwo.TargetShip.ID).IsDestroyed)
+                                        continue;
+                                    fwo.TargetShip = Ships.First(x => x.ID == fwo.TargetShip.ID);
+                                }
                                 order.ExecuteOrder();
                             }
 
@@ -138,18 +166,20 @@ namespace CodeFighter.Logic.Simulations
                         }
                         // END OF SHIPS WITH MP
                         // loop through other ships, checking for Point Defense weapons
-                        foreach (Ship currentShip in shipsNotAtInitiative.Where(x => x.Parts.Any(p => p is WeaponPart && ((WeaponPart)p).IsPointDefense && !((WeaponPart)p).HasFiredThisRound)))
+                        foreach (Ship currentShip in shipsNotAtInitiative.Where(x => !x.IsDestroyed && x.Parts.Any(p => p is WeaponPart && !p.IsDestroyed && ((WeaponPart)p).IsPointDefense && !((WeaponPart)p).HasFiredThisRound)))
                         {
                             // TODO: activate AI code to check for Point Defense weapon actions
-                            List<BaseOrder> orders = currentShip.GameLogic.GetOrders(currentShip, Ships.Clone(), Features.Clone());
+                            Ship currentShipRef = currentShip;
+                            List<BaseOrder> orders = currentShip.GameLogic.GetOrders(currentShipRef, Ships.Clone(), Features.Clone());
 
                             // hookup handlers
-                            currentShip.OnShipDestroyed -= new ShipDestroyedEvent(ShipDestroyedHandler);
-                            currentShip.OnShipDestroyed += new ShipDestroyedEvent(ShipDestroyedHandler);
                             foreach (FireWeaponOrder fwo in orders.Where(x => x is FireWeaponOrder))
                             {
                                 fwo.OnWeaponFired -= new WeaponFiredEvent(WeaponFiredHandler);
                                 fwo.OnWeaponFired += new WeaponFiredEvent(WeaponFiredHandler);
+
+                                fwo.OnTargetDestroyed -= new ShipDestroyedEvent(ShipDestroyedHandler);
+                                fwo.OnTargetDestroyed += new ShipDestroyedEvent(ShipDestroyedHandler);
 
                                 fwo.OnMessageResult -= new MessageEvent(MessageHandler);
                                 fwo.OnMessageResult += new MessageEvent(MessageHandler);
@@ -158,6 +188,8 @@ namespace CodeFighter.Logic.Simulations
                             foreach (FireWeaponOrder fwo in orders.Where(x => x is FireWeaponOrder && ((FireWeaponOrder)x).WeaponToFire.IsPointDefense))
                             {
                                 fwo.Simulation = this;
+                                fwo.CurrentShip = Ships.First(x => x.ID == fwo.CurrentShip.ID);
+                                fwo.TargetShip = Ships.First(x => x.ID == fwo.TargetShip.ID);
                                 fwo.ExecuteOrder();
                             }
                         }
@@ -203,6 +235,7 @@ namespace CodeFighter.Logic.Simulations
         public void ShipDestroyedHandler(object sender, ShipEventArgs e)
         {
             results.Add(new Animation(AnimationActionType.Kill, new AnimationKillDetails(e.ShipID)));
+            results.Add(new Animation(AnimationActionType.Message, null, new List<string>() { "*** "+Ships.First(x => x.ID == e.ShipID).Name + " Is Destroyed! ***" }));
         }
 
         public void WeaponFiredHandler(object sender, WeaponFiredEventArgs e)

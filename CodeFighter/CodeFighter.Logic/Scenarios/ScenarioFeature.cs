@@ -5,7 +5,7 @@ namespace CodeFighter.Logic.Scenarios
 {
     public static class FeatureType
     {
-        public const string Asteroid = "asteroid";
+        public static readonly string Asteroid = "asteroid";
     }
 
     public class ScenarioFeature : ICloneable

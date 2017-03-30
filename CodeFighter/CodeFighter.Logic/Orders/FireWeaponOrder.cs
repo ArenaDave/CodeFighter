@@ -33,6 +33,7 @@ namespace CodeFighter.Logic.Orders
     {
         #region Events
         public event WeaponFiredEvent OnWeaponFired;
+        public event ShipDestroyedEvent OnTargetDestroyed;
         public event MessageEvent OnMessageResult;
         #endregion
 
@@ -82,6 +83,10 @@ namespace CodeFighter.Logic.Orders
                     AttackResult attackResult = WeaponToFire.Fire();
                     result = result.Concat(attackResult.Messages).ToList<string>();
                     OnWeaponFired?.Invoke(this, new WeaponFiredEventArgs(CurrentShip.ID, TargetShip.ID, attackResult.IsHit, attackResult.IsCrit, result));
+                    if (attackResult.TargetDestroyed)
+                    {
+                        OnTargetDestroyed?.Invoke(this, new ShipEventArgs(TargetShip.ID, new List<string>() { string.Format("{0} was destroyed by this attack!", TargetShip.ToString()) }));
+                    }
                 }
             }
         }

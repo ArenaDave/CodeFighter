@@ -14,7 +14,7 @@ namespace CodeFighter.Logic.Orders
     public abstract class BaseOrder
     {
         
-        public Ship CurrentShip { get; protected set; }
+        public Ship CurrentShip { get; internal set; }
         internal Simulation Simulation { get; set; }
 
         internal abstract void ExecuteOrder();

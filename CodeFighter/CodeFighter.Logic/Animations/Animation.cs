@@ -5,12 +5,12 @@ namespace CodeFighter.Logic.Animations
 {
     public static class AnimationActionType
     {
-        public const string Add = "add";
-        public const string Kill = "kill";
-        public const string Move = "move";
-        public const string Shoot = "shoot";
-        public const string Explosion = "explosion";
-        public const string Message = "message";
+        public static readonly string Add = "add";
+        public static readonly string Kill = "kill";
+        public static readonly string Move = "move";
+        public static readonly string Shoot = "shoot";
+        public static readonly string Explosion = "explosion";
+        public static readonly string Message = "message";
     }
 
     public class MessageEventArgs : EventArgs
@@ -32,7 +32,7 @@ namespace CodeFighter.Logic.Animations
         
         public IAnimationDetails details { get; set; }
 
-        public List<string> Messages { get; set; }
+        public List<string> messages { get; set; }
 
         public Animation()
         {
@@ -42,7 +42,7 @@ namespace CodeFighter.Logic.Animations
         {
             this.actionType = type;
             this.details = animationDetails;
-            this.Messages = messages;
+            this.messages = messages;
         }
     }
     

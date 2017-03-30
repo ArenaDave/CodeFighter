@@ -113,30 +113,17 @@ namespace CodeFighter.Logic.Ships
                     this.HP.Max);
         }
 
-        #region Events
-        public event ShipDestroyedEvent OnShipDestroyed;
-        #endregion
-
         #region Public Methods
-        /// <summary>
-        /// Handles incoming damage to the Ship through any equipped DefenseParts
-        /// </summary>
-        /// <param name="Damage">Amount of damage to take</param>
-        /// <returns>List of status results from DefenseParts</returns>
-        public List<string> HitFor(int Damage)
-        {
-            return HitFor(Damage, string.Empty);
-        }
-
         /// <summary>
         /// Handles incoming damage to the Ship through any equipped DefenseParts, including resistance based on damage type
         /// </summary>
         /// <param name="Damage">Amount of damage to take</param>
         /// <param name="DamageType">Type of damage to take (Data Driven)</param>
         /// <returns>List of status results from DefenseParts</returns>
-        public List<string> HitFor(int Damage, string DamageType)
+        public List<string> HitFor(int Damage, string DamageType, out bool isDestroyed)
         {
             List<string> result = new List<string>();
+            isDestroyed = false;
             // loop through all defense parts and apply the damage to each
             foreach (DefensePart defense in Parts.Where(f => f is DefensePart && !f.IsDestroyed))
             {
@@ -175,11 +162,11 @@ namespace CodeFighter.Logic.Ships
                 // oh no, we died!
                 if (HP.Current <= 0)
                 {
-                    OnShipDestroyed?.Invoke(this, new ShipEventArgs(this.ID, new List<string>() { string.Format("{0} was destroyed by this attack!", this.ToString()) }));
+                    isDestroyed = true;
                     IsDestroyed = true;
                 }
             }
-
+            
             return result;
         }
 

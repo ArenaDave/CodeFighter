@@ -79,9 +79,9 @@ namespace CodeFighter.Logic.Parts
                     messages.Add(string.Format("{0} CRITS {1} for {2}",
                         this.Name,
                         targetShip.Name,
-                        this.WeaponDamage
+                        this.WeaponDamage * this.CritMultiplier
                         ));
-                    messages = messages.Concat(targetShip.HitFor(WeaponDamage * CritMultiplier, DamageType)).ToList<string>();
+                    messages = messages.Concat(targetShip.HitFor(WeaponDamage * CritMultiplier, DamageType, out result.TargetDestroyed)).ToList<string>();
                     result.IsHit = true;
                     result.IsCrit = true;
                 }
@@ -92,7 +92,7 @@ namespace CodeFighter.Logic.Parts
                         targetShip.Name,
                         this.WeaponDamage
                         ));
-                    messages = messages.Concat(targetShip.HitFor(WeaponDamage, DamageType)).ToList<string>();
+                    messages = messages.Concat(targetShip.HitFor(WeaponDamage, DamageType, out result.TargetDestroyed)).ToList<string>();
                     result.IsCrit = false;
                     result.IsHit = true;
                 }
@@ -133,15 +133,15 @@ namespace CodeFighter.Logic.Parts
             copy.Name = (string)this.Name.Clone();
             copy.HP = (StatWithMax)this.HP.Clone();
             copy.IsDestroyed = this.IsDestroyed;
-            copy.Target = (Ship)this.Target.Clone();
+            //copy.Target = (Ship)this.Target.Clone();
             copy.Mass = this.Mass;
-            copy.Actions = (List<BaseAction>)this.Actions.Clone();
+            copy.Actions = (List<BaseAction>)this.Actions?.Clone();
             copy.currentReload = this.currentReload;
             copy.WeaponDamage = this.WeaponDamage;
             copy.CritMultiplier = this.CritMultiplier;
             copy.ReloadTime = this.ReloadTime;
-            copy.DamageType = (string)this.DamageType.Clone();
-            copy.FiringType = (string)this.FiringType.Clone();
+            copy.DamageType = (string)this.DamageType?.Clone();
+            copy.FiringType = (string)this.FiringType?.Clone();
             copy.Range = this.Range;
             copy.IsPointDefense = this.IsPointDefense;
             copy.HasFiredThisRound = this.HasFiredThisRound;

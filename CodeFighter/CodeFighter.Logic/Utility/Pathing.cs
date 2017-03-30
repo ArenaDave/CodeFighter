@@ -205,7 +205,7 @@ namespace CodeFighter.Logic.Utility
                 {
                     bool isBlocked = (allShips.Any(x => x.Position.Equals(newNode.Loc)) 
                         || allFeatures.Any(x => x.Position.Equals(newNode.Loc)));
-                    if (isBlocked)
+                    if (!isBlocked)
                     {
                         newNode.G = node.G + 1;
                         newNode.H = Convert.ToInt32(newNode.Loc.DistanceTo(targetLoc));
