@@ -49,6 +49,7 @@
     <Compile Include="Animations\AnimationExplosionDetails.cs" />
     <Compile Include="Animations\AnimationKillDetails.cs" />
     <Compile Include="Animations\AnimationMoveDetails.cs" />
+    <Compile Include="Animations\AnimationShipUpdateDetails.cs" />
     <Compile Include="Animations\AnimationShootingDetails.cs" />
     <Compile Include="Animations\AnimationShotDetails.cs" />
     <Compile Include="Animations\IAnimationDetails.cs" />

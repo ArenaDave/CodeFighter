@@ -39,14 +39,15 @@ namespace CodeFighter.Logic.Parts
 
         public override string ToString()
         {
-            return string.Format("{0} ({1}{2}DMG: {3}{4}, {5}x on Crit, {6} Reload)",
+            return string.Format("{0} ({1}{2}DMG: {3}{4}, {5}x on Crit{6}){7}",
                 this.Name,
                 (FiringType != string.Empty ? string.Format("{0} ", FiringType) : string.Empty),
                 (Range > 0d ? string.Format("Rng: {0} ", Range.ToString()) : string.Empty),
                 WeaponDamage.ToString(),
                 (DamageType != string.Empty ? string.Format(" - ({0})", DamageType) : string.Empty),
                 CritMultiplier.ToString(),
-                (currentReload > 0 ? string.Format("{0}/{1}", currentReload, ReloadTime) : ReloadTime.ToString())
+                ReloadTime > 0 ? (currentReload > 0 ? string.Format(", Reloading: {0}/{1}", currentReload, ReloadTime) : string.Format(", {0} Reload", ReloadTime.ToString())) : "",
+                IsDestroyed ? " [DESTROYED!]" : ""
                 );
         }
 

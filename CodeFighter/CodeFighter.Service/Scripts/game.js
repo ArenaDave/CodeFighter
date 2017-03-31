@@ -268,6 +268,20 @@ function beginNextAction() {
         var messages = action.messages;
         addMessages(messages);
     }
+    else if (action.actionType == 'ship') {
+        var shipInfo = action.details;
+        var sd = document.getElementById("shipDetail" + shipInfo.id);
+        if (sd != null) {
+            updateShipDetail(shipInfo);
+        }
+        else {
+            addShipDetail(shipInfo);
+        }
+    }
+    else if (action.actionType == 'newround') {
+        var roundCounter = document.getElementById('roundCounter');
+        roundCounter.innerHTML = action.messages[0];
+    }
     // keep the game loop going
     return true;
 }
@@ -288,6 +302,14 @@ function startGame() {
     ships = [];
     beamShots = [];
     explosions = [];
+    var enemyShips = document.getElementById("enemyShipList").getElementsByTagName("div");
+    for (var i = 0; i < enemyShips.length; i++) {
+        enemyShips[i].outerHTML = "";
+    }
+    var playerShips = document.getElementById("playerShipList").getElementsByTagName("div");
+    for (var i = 0; i < playerShips.length; i++) {
+        playerShips[i].outerHTML = "";
+    }
     getActions();
 }
 function gameLoop() {
@@ -368,6 +390,20 @@ function addShip(shipID, startingPosition, sizeCategory, isEnemy) {
         isEnemy: isEnemy
     });
 }
+function addShipDetail(shipInfo) {
+    var reference = document.getElementById("shipTemplate");
+    var div = document.createElement("div");
+    div.id = "shipDetail" + shipInfo.id;
+    div.className = "shipTemplate col-xs-12 col-sm-6 col-lg-4";
+    div.innerHTML = reference.innerHTML;
+    if (shipInfo.ownerIsAI) {
+        document.getElementById("enemyShipList").appendChild(div);
+    }
+    else {
+        document.getElementById("playerShipList").appendChild(div);
+    }
+    updateShipDetail(shipInfo);
+}
 
 function moveShip(shipID, targetPosition) {
     // find ship with matching ID
@@ -390,6 +426,9 @@ function killShip(shipID) {
             addExplosion([ships[i].pos[0] / 32, ships[i].pos[1] / 32]);
         }
     }
+}
+function removeShipDetail(shipInfo) {
+    document.getElementById("shipDetail" + shipInfo.id).outerHTML = "";
 }
 
 function updateShips(dt) {
@@ -471,7 +510,34 @@ function updateShips(dt) {
 
     }
 }
+function updateShipDetail(shipInfo){
+    var sd = document.getElementById("shipDetail" + shipInfo.id);
+    if(sd != null)
+    {
+        var shipName = sd.getElementsByClassName("shipName")[0];
+        var shipSize = sd.getElementsByClassName("shipSize")[0];
+        var className = sd.getElementsByClassName("className")[0];
+        var shipHp = sd.getElementsByClassName("shipHp")[0];
+        var shipPos = sd.getElementsByClassName("shipPos")[0];
+        var shipParts = sd.getElementsByClassName("shipParts")[0];
 
+        if (shipInfo.isDestroyed) {
+            shipName.innerHTML = "<s>"+shipInfo.name+"</s>";
+        }
+        else {
+            shipName.innerHTML = shipInfo.name;
+        }
+        shipSize.innerHTML = shipInfo.sizeName;
+        className.innerHTML = shipInfo.className;
+        shipHp.innerHTML = shipInfo.hp;
+        shipPos.innerHTML = shipInfo.pos;
+        shipParts.innerHTML = "";
+        for(var i=0;i<shipInfo.parts.length;i++) {
+            shipParts.innerHTML += "<div>" + shipInfo.parts[i] + "</div>";
+        }
+
+    }
+}
 
 
 // BEAMS

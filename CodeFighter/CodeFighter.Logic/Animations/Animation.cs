@@ -11,6 +11,8 @@ namespace CodeFighter.Logic.Animations
         public static readonly string Shoot = "shoot";
         public static readonly string Explosion = "explosion";
         public static readonly string Message = "message";
+        public static readonly string ShipUpdate = "ship";
+        public static readonly string NewRound = "newround";
     }
 
     public class MessageEventArgs : EventArgs

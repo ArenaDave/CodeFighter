@@ -1,0 +1,219 @@
+﻿body {
+    background-color: black;
+    scrollbar-face-color: rgba(64,64,64,0.1);
+    scrollbar-track-color: rgba(32,32,32,0.4);
+    scrollbar-base-color: rgba(32,32,32,0.4);
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: rgba(32,32,32,0.4);
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    background-color: rgba(32,32,32,0.4);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: #111111;
+}
+
+::-webkit-scrollbar-button {
+    background-color: rgba(32,32,32,0.4);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #333333;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#canvasPanel {
+    width: 831px;
+}
+
+#mainCanvas {
+    margin: 0;
+    padding: 0;
+    top: 0;
+    left: 0;
+    height: 800px;
+    width: 800px;
+    position: relative;
+}
+
+#messageBox {
+    min-width: 15em;
+    height: 54em;
+    background-color: #222222;
+    color: #ffff00;
+    overflow: auto;
+}
+
+.messageFrame {
+    width: 100%;
+}
+
+/* BUTTONS */
+#buttons {
+    min-width: 15em;
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+.btn-primary:hover {
+    color: #ffffff;
+    background-color: #28415b;
+    border-color: #253c54;
+}
+
+.btn:hover, .btn:focus, .btn.focus {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:hover, a:focus {
+    color: #0ce3ac;
+    text-decoration: underline;
+}
+
+a:active, a:hover {
+    outline: 0;
+}
+
+.btn {
+    border-width: 2px;
+}
+
+.btn-primary {
+    color: #ffffff;
+    background-color: #375a7f;
+    border-color: #375a7f;
+}
+
+.btn-default {
+    color: #ffffff;
+    background-color: #464545;
+    border-color: #464545;
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 10px 15px;
+    font-size: 15px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/*PANELS*/
+.panel {
+    background-color: transparent;
+    border: 1px solid #333333;
+    border-radius: 4px;
+}
+
+/* LOADER */
+#processing {
+    color: white;
+    font-size: large;
+    font-weight: bold;
+    width: 14em;
+    height: 2em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -1.2em;
+    margin-left: -7em;
+    text-align: center;
+}
+
+#spinner {
+    border: 16px solid rgba(32,32,32,0.2); /* Grey */
+    border-top: 16px solid #3498db; /* Blue */
+    background-color: rgba(32,32,32,0.7);
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -76px;
+    margin-left: -76px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* SHIP DETAILS */
+h4 {
+    color: #aaaaaa;
+}
+
+.shipTemplate {
+    /*width:20em;*/
+    border: 1px solid #333333;
+    border-radius: 4px;
+    margin: 2px;
+    padding: 2px;
+    color: #aaaaaa;
+}
+
+.shipName {
+}
+
+.shipSize {
+}
+
+.className {
+}
+
+.shipHp {
+}
+
+.shipPos {
+}
+
+.shipParts {
+    max-height: 5em;
+    overflow: auto;
+}
+
+    .shipParts div {
+    }
+
+/* ROUND COUNTER */
+#roundCounter {
+    font-size: x-large;
+    color: #aa0000;
+    padding-right: 1em;
+    display: flex;
+    align-items: center;
+}

@@ -95,12 +95,14 @@ namespace CodeFighter.Logic.Simulations
             {
                 // TODO: remove hard-coded size category
                 results.Add(new Animation(AnimationActionType.Add, new AnimationAddDetails(ship.ID, ship.Position, ship.Owner.IsAI, 2)));
+                results.Add(new Animation(AnimationActionType.ShipUpdate, new AnimationShipUpdateDetails(ship)));
                 ship.EndOfTurn();
             }
 
             // loop through rounds
             while (continueRunning)
             {
+                results.Add(new Animation(AnimationActionType.NewRound, null, new List<string>() { string.Format("Round: {0}", roundCounter) }));
                 // loop through all initiatives
                 for (int initiative = 50; initiative > 0; initiative--)
                 {
@@ -236,6 +238,7 @@ namespace CodeFighter.Logic.Simulations
         {
             results.Add(new Animation(AnimationActionType.Kill, new AnimationKillDetails(e.ShipID)));
             results.Add(new Animation(AnimationActionType.Message, null, new List<string>() { "*** "+Ships.First(x => x.ID == e.ShipID).Name + " Is Destroyed! ***" }));
+            results.Add(new Animation(AnimationActionType.ShipUpdate, new AnimationShipUpdateDetails(Ships.First(x => x.ID == e.ShipID))));
         }
 
         public void WeaponFiredHandler(object sender, WeaponFiredEventArgs e)
@@ -243,11 +246,14 @@ namespace CodeFighter.Logic.Simulations
             List<AnimationShotDetails> shots = new List<AnimationShotDetails>();
             shots.Add(new AnimationShotDetails(e.ShooterID, e.TargetID, e.IsHit, e.IsCrit));
             results.Add(new Animation(AnimationActionType.Shoot, new AnimationShootingDetails(shots), e.Messages));
+            results.Add(new Animation(AnimationActionType.ShipUpdate, new AnimationShipUpdateDetails(Ships.First(x => x.ID == e.ShooterID))));
+            results.Add(new Animation(AnimationActionType.ShipUpdate, new AnimationShipUpdateDetails(Ships.First(x => x.ID == e.TargetID))));
         }
 
         public void MovedHandler(object sender, ShipMovedEventArgs e)
         {
             results.Add(new Animation(AnimationActionType.Move, new AnimationMoveDetails(e.ShipID, e.MovedTo), e.Messages));
+            results.Add(new Animation(AnimationActionType.ShipUpdate, new AnimationShipUpdateDetails(Ships.First(x => x.ID == e.ShipID))));
         }
 
         public void MessageHandler(object sender, MessageEventArgs e)

@@ -99,18 +99,20 @@ namespace CodeFighter.Logic.Ships
         public override string ToString()
         {
             if (this.Name != string.Empty)
-                return string.Format("{0} ({1}-class {2}) (HP:{3}/{4})",
+                return string.Format("{0} ({1}-class {2}) (HP:{3}/{4}){5}",
                     this.Name,
                     this.Hull.ClassName,
                     this.Hull.Size.Name,
                     this.HP.Current,
-                    this.HP.Max);
+                    this.HP.Max,
+                    this.IsDestroyed?" [DESTROYED!]":"");
             else
-                return string.Format("{0}-class {1} (HP:{2}/{3})",
+                return string.Format("{0}-class {1} (HP:{2}/{3}){4}",
                     this.Hull.ClassName,
                     this.Hull.Size.Name,
                     this.HP.Current,
-                    this.HP.Max);
+                    this.HP.Max,
+                    this.IsDestroyed ? " [DESTROYED!]" : "");
         }
 
         #region Public Methods
