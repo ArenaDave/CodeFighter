@@ -288,11 +288,16 @@ function beginNextAction() {
 
 function addMessages(messages) {
     if (messages != null) {
+        var div = document.createElement('div');
+        div.className = 'innerMessage panel';
         for (var i = 0; i < messages.length; i++) {
-            var messageBox = document.getElementById('messageBox');
-            messageBox.innerHTML += "<br/>" + messages[i];
-            messageBox.scrollTop = messageBox.scrollHeight;
+            div.innerHTML += messages[i];
+            if (i < messages.length - 1)
+                div.innerHTML += '<br/>';
         }
+        var messageBox = document.getElementById('messageBox');
+        messageBox.appendChild(div);
+        messageBox.scrollTop = messageBox.scrollHeight;
     }
 }
 
