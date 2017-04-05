@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeFighter.Service", "Code
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeFighter.Logic", "CodeFighter.Logic\CodeFighter.Logic.csproj", "{EBC2B225-A947-4A69-B537-3670A633097B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteShifter", "SpriteShifter\SpriteShifter.csproj", "{05883BA2-582B-4FAD-B4F4-9A686396B3DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{EBC2B225-A947-4A69-B537-3670A633097B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBC2B225-A947-4A69-B537-3670A633097B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBC2B225-A947-4A69-B537-3670A633097B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05883BA2-582B-4FAD-B4F4-9A686396B3DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05883BA2-582B-4FAD-B4F4-9A686396B3DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05883BA2-582B-4FAD-B4F4-9A686396B3DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05883BA2-582B-4FAD-B4F4-9A686396B3DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
