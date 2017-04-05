@@ -127,13 +127,29 @@ namespace CodeFighter.Logic.Players
         {
             List<BaseOrder> orders = new List<BaseOrder>();
 
-            // check weapon range, if any weapon is not yet in range, move towards the target ship
-            double minRange = 99;
-            foreach (WeaponPart weapon in currentShip.Parts.Where(x => x is WeaponPart && !x.IsDestroyed))
+            // if no shields, move away from target ship
+            bool fleeAI = false;
+            int sumMaxShieldHP = 0;
+            int sumCurrentShieldHP = 0;
+            foreach (DefensePart defense in currentShip.Parts.Where(x => x is DefensePart && !x.IsDestroyed))
             {
-                if (weapon.Range < minRange)
-                    minRange = weapon.Range;
+                // identify a part that can repair itself
+                if (defense.Actions.Any(x => x is RepairPart && ((RepairPart)x).TargetPart == defense))
+                {
+                    sumMaxShieldHP += defense.HP.Max;
+                    sumCurrentShieldHP += defense.HP.Current;
+                }
             }
+            fleeAI = (sumCurrentShieldHP < sumMaxShieldHP / 4);
+
+            // check weapon range, if any weapon is not yet in range, move towards the target ship
+            double minRange = 12;
+            if (!fleeAI)
+                foreach (WeaponPart weapon in currentShip.Parts.Where(x => x is WeaponPart && !x.IsDestroyed))
+                {
+                    if (weapon.Range < minRange)
+                        minRange = weapon.Range;
+                }
 
             Pathing pathHelper = new Pathing(allShips, allFeatures);
 
