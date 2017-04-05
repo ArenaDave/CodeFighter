@@ -25,7 +25,7 @@ namespace CodeFighter.Logic.Utility
     {
         #region Private Variables
         List<Ship> allShips = new List<Ship>();
-        List<ScenarioFeature> allFeatures = new List<ScenarioFeature>();
+        List<Feature> allFeatures = new List<Feature>();
         int boardWidth = 25;
         int boardHeight = 25;
         List<Node> openList = new List<Node>();
@@ -33,7 +33,7 @@ namespace CodeFighter.Logic.Utility
         #endregion
 
         #region Constructor
-        public Pathing(List<Ship> ships, List<ScenarioFeature> features)
+        public Pathing(List<Ship> ships, List<Feature> features)
         {
             this.allShips = ships;
             this.allFeatures = features;

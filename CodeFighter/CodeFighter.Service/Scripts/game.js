@@ -22,6 +22,7 @@ var backgroundTiles = [];
 var ships = [];
 var beamShots = [];
 var explosions = [];
+var features = [];
 
 // magic number for ship movement speed
 var shipSpeed = 64;
@@ -71,7 +72,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		'images/Galaxy_star_field4.png',
         'images/ship2.png',
         'images/enemy2.png',
-        'images/explosion.png'
+        'images/explosion.png',
+        'images/asteroid1.png',
+        'images/asteroid2.png',
+        'images/asteroid3.png',
+        'images/asteroid4.png',
+        'images/asteroid5.png',
+        'images/asteroid6.png'
     ]);
     resources.onReady(init);
 });
@@ -282,6 +289,9 @@ function beginNextAction() {
         var roundCounter = document.getElementById('roundCounter');
         roundCounter.innerHTML = action.messages[0];
     }
+    else if (action.actionType == 'feature') {
+        addFeature(action.details);
+    }
     // keep the game loop going
     return true;
 }
@@ -328,6 +338,7 @@ function gameLoop() {
         updateShips(dt);
         updateBeams(dt);
         updateExplosions(dt);
+        updateFeatures(dt);
         renderAll();
     }
     // store last execution time
@@ -373,6 +384,7 @@ function renderAll() {
     renderEntities(ships);
     renderLines(beamShots);
     renderEntities(explosions);
+    renderEntities(features);
 }
 
 
@@ -693,5 +705,37 @@ function updateExplosions(dt) {
         if (explosions.length == 0) {
             explosionsDone = true;
         }
+    }
+}
+
+
+// FEATURES
+function addFeature(featureDetails) {
+    if (featureDetails.type == 'asteroid') {
+        var rand = rollDice(4);
+        var imageName = 'images/asteroid' + rand + '.png';
+        var randomAnimationStart = rollDice(16);
+        var sequence = [];//[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+        for (var i = 0; i < 16; i++) {
+            sequence.push((randomAnimationStart+i) % 16);
+        }
+        var randomSpeed = rollDice(10);
+
+        features.push({
+            pos: [featureDetails.position.X * cellSize, featureDetails.position.Y * cellSize],
+            sprite: new Sprite(imageName,
+                [0, 0],
+                [32, 32],
+                randomSpeed,
+                sequence,
+                null,
+                false)
+        });
+    }
+}
+
+function updateFeatures(dt) {
+    for (var i = 0; i < features.length; i++) {
+        features[i].sprite.update(dt);
     }
 }

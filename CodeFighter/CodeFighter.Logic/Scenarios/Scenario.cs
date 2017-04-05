@@ -10,7 +10,7 @@ namespace CodeFighter.Logic.Scenarios
         public string Name { get; set; }
         public string Description { get; set; }
         public List<ScenarioShip> Ships { get; set; }
-        public List<ScenarioFeature> Features { get; set; }
+        public List<Feature> Features { get; set; }
         public int RoundLimit { get; set; }
     }
 

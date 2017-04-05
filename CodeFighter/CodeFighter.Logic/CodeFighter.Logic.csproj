@@ -56,6 +56,7 @@
     <Compile Include="Animations\Animation.cs" />
     <Compile Include="Animations\AnimationAddDetails.cs" />
     <Compile Include="Animations\AnimationExplosionDetails.cs" />
+    <Compile Include="Animations\AnimationFeatureDetails.cs" />
     <Compile Include="Animations\AnimationKillDetails.cs" />
     <Compile Include="Animations\AnimationMoveDetails.cs" />
     <Compile Include="Animations\AnimationShipUpdateDetails.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="Players\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenarios\Scenario.cs" />
-    <Compile Include="Scenarios\ScenarioFeature.cs" />
+    <Compile Include="Scenarios\Feature.cs" />
     <Compile Include="Scenarios\ScenarioShip.cs" />
     <Compile Include="Ships\HullSize.cs" />
     <Compile Include="Ships\Ship.cs" />

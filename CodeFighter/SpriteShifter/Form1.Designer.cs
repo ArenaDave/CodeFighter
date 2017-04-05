@@ -46,19 +46,21 @@
             this.lblMessage = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ddlInputFacing = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.ddlFacing = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.cbxResize = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.btnAssemble = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.ddlInputFacing = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // ofdInput
@@ -75,16 +77,17 @@
             // 
             // tbxSelectedFile
             // 
-            this.tbxSelectedFile.Location = new System.Drawing.Point(93, 12);
+            this.tbxSelectedFile.Location = new System.Drawing.Point(6, 52);
+            this.tbxSelectedFile.Multiline = true;
             this.tbxSelectedFile.Name = "tbxSelectedFile";
             this.tbxSelectedFile.ReadOnly = true;
-            this.tbxSelectedFile.Size = new System.Drawing.Size(435, 20);
+            this.tbxSelectedFile.Size = new System.Drawing.Size(235, 49);
             this.tbxSelectedFile.TabIndex = 1;
             this.tbxSelectedFile.TabStop = false;
             // 
             // btnSelectFile
             // 
-            this.btnSelectFile.Location = new System.Drawing.Point(12, 12);
+            this.btnSelectFile.Location = new System.Drawing.Point(6, 19);
             this.btnSelectFile.Name = "btnSelectFile";
             this.btnSelectFile.Size = new System.Drawing.Size(75, 23);
             this.btnSelectFile.TabIndex = 0;
@@ -136,7 +139,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(357, 278);
+            this.label3.Location = new System.Drawing.Point(350, 236);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(14, 13);
             this.label3.TabIndex = 11;
@@ -144,7 +147,7 @@
             // 
             // tbxOutputSizeY
             // 
-            this.tbxOutputSizeY.Location = new System.Drawing.Point(375, 275);
+            this.tbxOutputSizeY.Location = new System.Drawing.Point(370, 233);
             this.tbxOutputSizeY.Name = "tbxOutputSizeY";
             this.tbxOutputSizeY.Size = new System.Drawing.Size(43, 20);
             this.tbxOutputSizeY.TabIndex = 10;
@@ -153,7 +156,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(291, 278);
+            this.label4.Location = new System.Drawing.Point(283, 236);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(14, 13);
             this.label4.TabIndex = 9;
@@ -162,7 +165,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(190, 278);
+            this.label5.Location = new System.Drawing.Point(182, 236);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(95, 13);
             this.label5.TabIndex = 8;
@@ -170,7 +173,7 @@
             // 
             // tbxOutputSizeX
             // 
-            this.tbxOutputSizeX.Location = new System.Drawing.Point(309, 275);
+            this.tbxOutputSizeX.Location = new System.Drawing.Point(302, 233);
             this.tbxOutputSizeX.Name = "tbxOutputSizeX";
             this.tbxOutputSizeX.Size = new System.Drawing.Size(42, 20);
             this.tbxOutputSizeX.TabIndex = 7;
@@ -178,7 +181,7 @@
             // 
             // btnConvert
             // 
-            this.btnConvert.Location = new System.Drawing.Point(9, 58);
+            this.btnConvert.Location = new System.Drawing.Point(3, 78);
             this.btnConvert.Name = "btnConvert";
             this.btnConvert.Size = new System.Drawing.Size(75, 23);
             this.btnConvert.TabIndex = 12;
@@ -189,10 +192,11 @@
             // lblMessage
             // 
             this.lblMessage.AutoSize = true;
-            this.lblMessage.Location = new System.Drawing.Point(424, 278);
+            this.lblMessage.Location = new System.Drawing.Point(419, 236);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(0, 13);
+            this.lblMessage.Size = new System.Drawing.Size(52, 13);
             this.lblMessage.TabIndex = 13;
+            this.lblMessage.Text = "message!";
             // 
             // groupBox1
             // 
@@ -202,9 +206,9 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.tbxInputSizeY);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 54);
+            this.groupBox1.Location = new System.Drawing.Point(265, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(250, 93);
+            this.groupBox1.Size = new System.Drawing.Size(260, 107);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Resize Horizontal Spritesheet";
@@ -216,16 +220,33 @@
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.ddlFacing);
             this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Location = new System.Drawing.Point(268, 54);
+            this.groupBox2.Location = new System.Drawing.Point(265, 125);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(260, 186);
+            this.groupBox2.Size = new System.Drawing.Size(260, 105);
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Create 8-direction rotation";
             // 
+            // ddlInputFacing
+            // 
+            this.ddlInputFacing.FormattingEnabled = true;
+            this.ddlInputFacing.Location = new System.Drawing.Point(122, 19);
+            this.ddlInputFacing.Name = "ddlInputFacing";
+            this.ddlInputFacing.Size = new System.Drawing.Size(121, 21);
+            this.ddlInputFacing.TabIndex = 4;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(13, 22);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(66, 13);
+            this.label9.TabIndex = 3;
+            this.label9.Text = "Input Facing";
+            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(13, 100);
+            this.button1.Location = new System.Drawing.Point(6, 74);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -245,7 +266,7 @@
             "South West",
             "West",
             "North West"});
-            this.ddlFacing.Location = new System.Drawing.Point(122, 60);
+            this.ddlFacing.Location = new System.Drawing.Point(122, 46);
             this.ddlFacing.Name = "ddlFacing";
             this.ddlFacing.Size = new System.Drawing.Size(121, 21);
             this.ddlFacing.TabIndex = 1;
@@ -253,7 +274,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(10, 63);
+            this.label6.Location = new System.Drawing.Point(10, 49);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(78, 13);
             this.label6.TabIndex = 0;
@@ -262,7 +283,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 278);
+            this.label7.Location = new System.Drawing.Point(9, 236);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(149, 13);
             this.label7.TabIndex = 3;
@@ -273,7 +294,7 @@
             this.cbxResize.AutoSize = true;
             this.cbxResize.Checked = true;
             this.cbxResize.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbxResize.Location = new System.Drawing.Point(164, 278);
+            this.cbxResize.Location = new System.Drawing.Point(161, 236);
             this.cbxResize.Name = "cbxResize";
             this.cbxResize.Size = new System.Drawing.Size(15, 14);
             this.cbxResize.TabIndex = 4;
@@ -283,12 +304,22 @@
             // 
             this.groupBox3.Controls.Add(this.btnAssemble);
             this.groupBox3.Controls.Add(this.label8);
-            this.groupBox3.Location = new System.Drawing.Point(13, 154);
+            this.groupBox3.Location = new System.Drawing.Point(10, 125);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(249, 86);
+            this.groupBox3.Size = new System.Drawing.Size(249, 105);
             this.groupBox3.TabIndex = 16;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Assemble Spritesheet";
+            // 
+            // btnAssemble
+            // 
+            this.btnAssemble.Location = new System.Drawing.Point(6, 67);
+            this.btnAssemble.Name = "btnAssemble";
+            this.btnAssemble.Size = new System.Drawing.Size(75, 23);
+            this.btnAssemble.TabIndex = 1;
+            this.btnAssemble.Text = "Assemble";
+            this.btnAssemble.UseVisualStyleBackColor = true;
+            this.btnAssemble.Click += new System.EventHandler(this.btnAssemble_Click);
             // 
             // label8
             // 
@@ -299,47 +330,30 @@
             this.label8.Text = "Select multiple files in the picker above.      Images will be sorted alphabetica" +
     "lly.";
             // 
-            // btnAssemble
+            // groupBox4
             // 
-            this.btnAssemble.Location = new System.Drawing.Point(13, 52);
-            this.btnAssemble.Name = "btnAssemble";
-            this.btnAssemble.Size = new System.Drawing.Size(75, 23);
-            this.btnAssemble.TabIndex = 1;
-            this.btnAssemble.Text = "Assemble";
-            this.btnAssemble.UseVisualStyleBackColor = true;
-            this.btnAssemble.Click += new System.EventHandler(this.btnAssemble_Click);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(13, 32);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(66, 13);
-            this.label9.TabIndex = 3;
-            this.label9.Text = "Input Facing";
-            // 
-            // ddlInputFacing
-            // 
-            this.ddlInputFacing.FormattingEnabled = true;
-            this.ddlInputFacing.Location = new System.Drawing.Point(122, 29);
-            this.ddlInputFacing.Name = "ddlInputFacing";
-            this.ddlInputFacing.Size = new System.Drawing.Size(121, 21);
-            this.ddlInputFacing.TabIndex = 4;
+            this.groupBox4.Controls.Add(this.btnSelectFile);
+            this.groupBox4.Controls.Add(this.tbxSelectedFile);
+            this.groupBox4.Location = new System.Drawing.Point(12, 12);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(247, 107);
+            this.groupBox4.TabIndex = 17;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Select File(s)";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 300);
+            this.ClientSize = new System.Drawing.Size(541, 261);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.cbxResize);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblMessage);
-            this.Controls.Add(this.btnSelectFile);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.tbxSelectedFile);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.tbxOutputSizeY);
             this.Controls.Add(this.tbxOutputSizeX);
@@ -351,6 +365,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -386,6 +402,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox ddlInputFacing;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.GroupBox groupBox4;
     }
 }
 

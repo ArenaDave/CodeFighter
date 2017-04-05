@@ -7,6 +7,6 @@ namespace CodeFighter.Logic.Simulations
 {
     public interface IGameLogic
     {
-        List<BaseOrder> GetOrders(Ship currentShip, List<Ship> ships, List<ScenarioFeature> features);
+        List<BaseOrder> GetOrders(Ship currentShip, List<Ship> ships, List<Feature> features);
     }
 }

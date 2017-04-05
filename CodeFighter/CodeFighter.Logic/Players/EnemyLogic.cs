@@ -16,9 +16,9 @@ namespace CodeFighter.Logic.Players
     class EnemyLogic : IGameLogic
     {
         List<Ship> allShips = new List<Ship>();
-        List<ScenarioFeature> allFeatures = new List<ScenarioFeature>();
+        List<Feature> allFeatures = new List<Feature>();
 
-        public List<BaseOrder> GetOrders(Ship currentShip, List<Ship> ships, List<ScenarioFeature> features)
+        public List<BaseOrder> GetOrders(Ship currentShip, List<Ship> ships, List<Feature> features)
         {
             this.allShips = ships;
             this.allFeatures = features;

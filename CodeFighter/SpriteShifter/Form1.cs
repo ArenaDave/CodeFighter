@@ -12,6 +12,7 @@ namespace SpriteShifter
             ddlFacing.SelectedIndex = 6;
             ddlInputFacing.DataSource = Enum.GetValues(typeof(ImageFacing));
             ddlInputFacing.SelectedIndex = 0;
+            lblMessage.Text = string.Empty;
 
         }
 
@@ -22,7 +23,7 @@ namespace SpriteShifter
             if (ofdInput.ShowDialog() == DialogResult.OK)
             {
                 selectedFilePath = ofdInput.FileNames;
-                tbxSelectedFile.Text = string.Join(",", selectedFilePath);
+                tbxSelectedFile.Text = string.Join(","+Environment.NewLine, selectedFilePath);
             }
 
         }

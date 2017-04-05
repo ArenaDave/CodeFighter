@@ -8,6 +8,7 @@ using CodeFighter.Logic.Ships;
 using CodeFighter.Logic.Utility;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace CodeFighter.Logic.Simulations
 {
@@ -16,7 +17,7 @@ namespace CodeFighter.Logic.Simulations
 
         Player enemyPlayer;
         Player currentPlayer;
-        internal List<ScenarioFeature> Features = new List<ScenarioFeature>();
+        internal List<Feature> Features = new List<Feature>();
         internal List<Ship> Ships = new List<Ship>();
         Scenario currentScenario;
         List<Animation> results;
@@ -37,12 +38,34 @@ namespace CodeFighter.Logic.Simulations
 
             // features
             // TODO: load features scenario
+            Features.AddRange(getAsteroids());
 
             // ships
             // TODO: load from scenario
             Ships.Add(getShip(currentPlayer, 0, "Iowa", "BB", 40, "UNSC Missouri", new Point(5, 5)));
             Ships.Add(getShip(enemyPlayer, 1, "Bunker", "BB", 40, "Alpha-01", new Point(20, 20)));
             // TODO: add Game Logic to player's ships
+        }
+
+        private List<Feature> getAsteroids()
+        {
+            List<Feature> results = new List<Feature>();
+            int lastID = 0;
+            using (RNG rng = new RNG())
+                for (int x = 0; x < 25; x++)
+                    for (int y = 0; y < 25; y++)
+                    {
+                        if (rng.d100() > 90)
+                        {
+                            Feature f = new Feature();
+                            f.ID = ++lastID;
+                            f.IsBlocking = true;
+                            f.Position = new Point(x, y);
+                            f.Type = FeatureType.Asteroid;
+                            results.Add(f);
+                        }
+                    }
+            return results;
         }
 
         // placeholder until we load from scenarios
@@ -86,10 +109,16 @@ namespace CodeFighter.Logic.Simulations
         {
             // reset animations
             results = new List<Animation>();
-            
+
             bool continueRunning = true;
             int roundCounter = 1;
-            
+
+            // send all features
+            foreach(Feature feature in Features)
+            {
+                results.Add(new Animation(AnimationActionType.Feature, new AnimationFeatureDetails(feature.ID, feature.Position, feature.Type, feature.IsBlocking)));
+            }
+
             // reset all ships
             foreach (Ship ship in Ships)
             {
@@ -112,7 +141,7 @@ namespace CodeFighter.Logic.Simulations
                     // shuffle the list
                     shipsAtInitiative.Shuffle();
                     // loop until no ships at this initiative have MP remaining.
-                    while (shipsAtInitiative.Any(x =>!x.IsDestroyed && x.MP.Current > 0) 
+                    while (shipsAtInitiative.Any(x => !x.IsDestroyed && x.MP.Current > 0)
                         && Ships.Any(x => !x.IsDestroyed && x.Owner == currentPlayer)
                         && Ships.Any(x => !x.IsDestroyed && x.Owner == enemyPlayer))
                     {
@@ -135,7 +164,7 @@ namespace CodeFighter.Logic.Simulations
                                 fwo.OnMessageResult -= new MessageEvent(MessageHandler);
                                 fwo.OnMessageResult += new MessageEvent(MessageHandler);
                             }
-                            foreach(MoveOrder mo in orders.Where(x=>x is MoveOrder))
+                            foreach (MoveOrder mo in orders.Where(x => x is MoveOrder))
                             {
                                 mo.OnShipMoved -= new ShipMovedEvent(MovedHandler);
                                 mo.OnShipMoved += new ShipMovedEvent(MovedHandler);
@@ -153,7 +182,7 @@ namespace CodeFighter.Logic.Simulations
                                 if (Ships.First(x => x.ID == order.CurrentShip.ID).IsDestroyed)
                                     continue;
                                 order.CurrentShip = Ships.First(x => x.ID == order.CurrentShip.ID);
-                                if(order is FireWeaponOrder)
+                                if (order is FireWeaponOrder)
                                 {
                                     FireWeaponOrder fwo = (FireWeaponOrder)order;
                                     if (Ships.First(x => x.ID == fwo.TargetShip.ID).IsDestroyed)
@@ -224,7 +253,7 @@ namespace CodeFighter.Logic.Simulations
                 else
                 {
                     roundCounter++;
-                    foreach(Ship ship in Ships)
+                    foreach (Ship ship in Ships)
                     {
                         results.Add(ship.EndOfTurn());
                     }
@@ -237,7 +266,7 @@ namespace CodeFighter.Logic.Simulations
         public void ShipDestroyedHandler(object sender, ShipEventArgs e)
         {
             results.Add(new Animation(AnimationActionType.Kill, new AnimationKillDetails(e.ShipID)));
-            results.Add(new Animation(AnimationActionType.Message, null, new List<string>() { "*** "+Ships.First(x => x.ID == e.ShipID).Name + " Is Destroyed! ***" }));
+            results.Add(new Animation(AnimationActionType.Message, null, new List<string>() { "*** " + Ships.First(x => x.ID == e.ShipID).Name + " Is Destroyed! ***" }));
             results.Add(new Animation(AnimationActionType.ShipUpdate, new AnimationShipUpdateDetails(Ships.First(x => x.ID == e.ShipID))));
         }
 
