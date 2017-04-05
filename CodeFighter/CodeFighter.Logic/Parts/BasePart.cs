@@ -43,19 +43,19 @@ namespace CodeFighter.Logic.Parts
         }
         #endregion
 
-        public virtual List<Animation> DoAction(Ship target)
+        public virtual List<string> DoAction(Ship target)
         {
             if (this.Target == null)
             {
                 this.Target = target;
             }
 
-            List<Animation> results = new List<Animation>();
+            List<string> results = new List<string>();
             foreach(BaseAction action in this.Actions)
             {
                 action.TargetShip = this.Target;
-                Animation r = action.DoAction();
-                if(r!=null)
+                string r = action.DoAction();
+                if(!string.IsNullOrEmpty(r))
                     results.Add(r);
             }
 
@@ -69,6 +69,7 @@ namespace CodeFighter.Logic.Parts
             if (this.IsDestroyed)
             {
                 result = string.Format("Repaired {0}", this.Name);
+                this.HP.Current = this.HP.Max;
                 this.IsDestroyed = false;
             }
 

@@ -226,7 +226,7 @@ namespace CodeFighter.Logic.Simulations
                     roundCounter++;
                     foreach(Ship ship in Ships)
                     {
-                        results.AddRange(ship.EndOfTurn());
+                        results.Add(ship.EndOfTurn());
                     }
                 }
             }

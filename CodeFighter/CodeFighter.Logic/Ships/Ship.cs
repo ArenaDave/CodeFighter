@@ -186,10 +186,10 @@ namespace CodeFighter.Logic.Ships
             return copy;
         }
 
-        public List<Animation> EndOfTurn()
+        public Animation EndOfTurn()
         {
-            List<Animation> result = new List<Animation>();
-            result.Add(new Animation(AnimationActionType.Message, null, new List<string>() { string.Format("Resolving End-of-Turn for {0}", this.ToString()) }));
+            List<string> resultMessages = new List<string>();
+            resultMessages.Add(string.Format("Resolving End-of-Turn for {0}", this.ToString()));
 
             this.MP.Max = this.MaxMP;
             this.MP.Current = this.MP.Max;
@@ -197,18 +197,18 @@ namespace CodeFighter.Logic.Ships
             //Process Actions
             foreach (BasePart part in Parts.Where(x => !x.IsDestroyed))
             {
-                result.AddRange(part.DoAction(this));
+                resultMessages.AddRange(part.DoAction(this));
             }
 
             // clean up weapons
             foreach (WeaponPart weapon in Parts.Where(x => x is WeaponPart && !x.IsDestroyed))
             {
                 if (weapon.ReloadTime > 0)
-                    result.Add(new Animation(AnimationActionType.Message, null, new List<string>() { string.Format("{0} will be reloaded in {1} turns", weapon.Name, weapon.Reload()) }));
+                    resultMessages.Add(string.Format("{0} will be reloaded in {1} turns", weapon.Name, weapon.Reload()));
                 weapon.EndOfTurn();
             }
 
-            return result;
+            return new Animation(AnimationActionType.Message, null, resultMessages);
 
 
         }

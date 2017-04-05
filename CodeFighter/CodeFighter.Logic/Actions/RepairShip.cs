@@ -10,28 +10,30 @@ namespace CodeFighter.Logic.Actions
     public class RepairShip : BaseAction
     {
         #region Public Methods
-        public override Animation DoAction()
+        public override string DoAction()
         {
             int repairAmount = (int)ActionValues["RepairAmount"];
             List<string> repaired = new List<string>();
             string result = string.Empty;
-            using (RNG rand = new RNG())
+            if (TargetShip.HP.Current < TargetShip.HP.Max)
             {
-                foreach (BasePart part in TargetShip.Parts.Where(f => f.IsDestroyed))
-                    if (rand.d100() > 50)
-                    {
-                        result = part.Repair(repairAmount);
-                        repaired.Add(part.Name + (!string.IsNullOrEmpty(result) ? string.Format(" ({0} HPs)", result) : string.Empty));
-                    }
+                using (RNG rand = new RNG())
+                {
+                    foreach (BasePart part in TargetShip.Parts.Where(f => f.IsDestroyed))
+                        if (rand.d100() > 50)
+                        {
+                            result = part.Repair(repairAmount);
+                            repaired.Add(part.Name + (!string.IsNullOrEmpty(result) ? string.Format(" ({0} HPs)", result) : string.Empty));
+                        }
+                }
+
+                int oldHP = TargetShip.HP.Current;
+                int newHP = TargetShip.HP.Add(repairAmount).Current;
+                result = string.Format("Repaired {0} for {1} HPs", TargetShip.Name, (newHP - oldHP));
+                if (repaired.Count > 0)
+                    result = result + string.Format(", and Repaired {0}", string.Join(", ", repaired.ToArray()));
             }
-
-            int oldHP = TargetShip.HP.Current;
-            int newHP = TargetShip.HP.Add(repairAmount).Current;
-            result = string.Format("Repaired {0} for {1} HPs", TargetShip.Name, (newHP-oldHP));
-            if (repaired.Count > 0)
-                result = result + string.Format(", and Repaired {0}", string.Join(", ", repaired.ToArray()));
-
-            return new Animation(AnimationActionType.Message,null, new List<string>() { result });
+            return result;
         }
         
         public override string ToString()

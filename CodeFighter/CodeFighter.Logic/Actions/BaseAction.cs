@@ -12,7 +12,7 @@ namespace CodeFighter.Logic.Actions
         public BasePart TargetPart { get; set; }
         public Ship TargetShip { get; set; }
         public CloneableDictionary<string,object> ActionValues { get; set; }
-        public abstract Animation DoAction();
+        public abstract string DoAction();
         public abstract object Clone();
     }
 }

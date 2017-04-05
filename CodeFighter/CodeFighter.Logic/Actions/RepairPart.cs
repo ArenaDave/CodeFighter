@@ -10,7 +10,7 @@ namespace CodeFighter.Logic.Actions
     public class RepairPart : BaseAction
     {
         #region Public Methods
-        public override Animation DoAction()
+        public override string DoAction()
         {
             int repairAmount = (int)ActionValues["RepairAmount"];
             if (this.TargetPart.HP.Current < this.TargetPart.HP.Max)
@@ -18,15 +18,15 @@ namespace CodeFighter.Logic.Actions
                 if (this.TargetPart.HP.Current <= this.TargetPart.HP.Max - repairAmount)
                 {
                     this.TargetPart.HP.Current += repairAmount;
-                    return new Animation(AnimationActionType.Message, null, new List<string>() { string.Format("{0} recovered {1}, current HP: {2}", this.TargetPart.Name, repairAmount, this.TargetPart.HP.Current) });
+                    return string.Format("{0} recovered {1}, current HP: {2}", this.TargetPart.Name, repairAmount, this.TargetPart.HP.Current);
                 }
                 else
                 {
                     this.TargetPart.HP.Current = this.TargetPart.HP.Max;
-                    return new Animation(AnimationActionType.Message, null, new List<string>() { string.Format("{0}, current HP: {0}", this.TargetPart.Name, this.TargetPart.HP.Current) });
+                    return string.Format("{0}, current HP: {1}", this.TargetPart.Name, this.TargetPart.HP.Current);
                 }
             }
-            return new Animation(AnimationActionType.Message, null, new List<string>() { string.Format("{0}, current HP: {0}", this.TargetPart.Name, this.TargetPart.HP.Current) });
+            return string.Format("{0}, current HP: {1}", this.TargetPart.Name, this.TargetPart.HP.Current);
         }
 
         public override string ToString()
