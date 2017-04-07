@@ -1,4 +1,5 @@
-﻿using CodeFighter.Logic.Actions;
+﻿using CodeFighter.Data;
+using CodeFighter.Logic.Actions;
 using CodeFighter.Logic.Animations;
 using CodeFighter.Logic.Ships;
 using CodeFighter.Logic.Utility;
@@ -9,16 +10,6 @@ namespace CodeFighter.Logic.Parts
 {
     public abstract class BasePart : ICloneable
     {
-        protected Guid partID;
-
-        public Guid PartID
-        {
-            get { if (partID == Guid.Empty)
-                    partID = Guid.NewGuid();
-                return partID; }
-            set { partID = value; }
-        }
-
         public string Name { get; set; }
         public StatWithMax HP { get; set; }
         public bool IsDestroyed { get; set; }
@@ -40,6 +31,16 @@ namespace CodeFighter.Logic.Parts
             this.IsDestroyed = false;
             this.Target = null;
 
+        }
+
+        public BasePart(PartData data, List<BaseAction> actions)
+        {
+            this.Name = data.Name;
+            this.HP = new StatWithMax(data.MaxHP);
+            this.Mass = data.Mass;
+            this.Actions = actions;
+            this.IsDestroyed = false;
+            this.Target = null;
         }
         #endregion
 

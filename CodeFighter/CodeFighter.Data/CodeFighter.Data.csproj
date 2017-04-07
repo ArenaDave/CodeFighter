@@ -52,9 +52,9 @@
     <Compile Include="ActionData.cs" />
     <Compile Include="CodeFighterContext.cs" />
     <Compile Include="FeatureData.cs" />
-    <Compile Include="Migrations\201704070412199_Initialize.cs" />
-    <Compile Include="Migrations\201704070412199_Initialize.Designer.cs">
-      <DependentUpon>201704070412199_Initialize.cs</DependentUpon>
+    <Compile Include="Migrations\201704071708267_Initialize.cs" />
+    <Compile Include="Migrations\201704071708267_Initialize.Designer.cs">
+      <DependentUpon>201704071708267_Initialize.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PartData.cs" />
@@ -66,6 +66,7 @@
     <Compile Include="ScenarioShipData.cs" />
     <Compile Include="ShipData.cs" />
     <Compile Include="ShipHullData.cs" />
+    <Compile Include="ShipPartData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -74,12 +75,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201704070412199_Initialize.resx">
-      <DependentUpon>201704070412199_Initialize.cs</DependentUpon>
-    </EmbeddedResource>
+    <Content Include="Migrations\readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Migrations\readme.txt" />
+    <EmbeddedResource Include="Migrations\201704071708267_Initialize.resx">
+      <DependentUpon>201704071708267_Initialize.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

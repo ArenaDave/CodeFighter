@@ -3,6 +3,7 @@ using CodeFighter.Logic.Utility;
 using System.Collections.Generic;
 using System;
 using CodeFighter.Logic.Ships;
+using CodeFighter.Data;
 
 namespace CodeFighter.Logic.Parts
 {
@@ -69,11 +70,9 @@ namespace CodeFighter.Logic.Parts
         public override object Clone()
         {
             DefensePart copy = new DefensePart();
-            copy.partID = this.partID;
             copy.Name = (string)this.Name.Clone();
             copy.HP = (StatWithMax)this.HP.Clone();
             copy.IsDestroyed = this.IsDestroyed;
-            //copy.Target = (Ship)this.Target.Clone();
             copy.Mass = this.Mass;
             copy.Actions = (List<BaseAction>)this.Actions.Clone();
             copy.DR = this.DR;
@@ -92,6 +91,13 @@ namespace CodeFighter.Logic.Parts
             this.PenetrateVerb = penetrateVerb;
         }
         private DefensePart() : base() { }
+        public DefensePart(PartData data, List<BaseAction> actions)
+            : base(data,actions)
+        {
+            this.DR = data.DR;
+            this.DownAdjective = data.DownAdjective;
+            this.PenetrateVerb = data.PenetrateVerb;
+        }
         #endregion
 
     }

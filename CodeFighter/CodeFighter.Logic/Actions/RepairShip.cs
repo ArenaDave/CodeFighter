@@ -2,6 +2,7 @@
 using CodeFighter.Logic.Parts;
 using CodeFighter.Logic.Ships;
 using CodeFighter.Logic.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace CodeFighter.Logic.Actions
         #region Public Methods
         public override string DoAction()
         {
-            int repairAmount = (int)ActionValues["RepairAmount"];
+            int repairAmount = Convert.ToInt32(ActionValues["RepairAmount"]);
             List<string> repaired = new List<string>();
             string result = string.Empty;
             if (TargetShip.HP.Current < TargetShip.HP.Max)
@@ -38,14 +39,12 @@ namespace CodeFighter.Logic.Actions
         
         public override string ToString()
         {
-            return string.Format("Repair target Ship  for {0} HPs, 50% chance to repair Parts", ((int)ActionValues["RepairAmount"]).ToString());
+            return string.Format("Repair target Ship  for {0} HPs, 50% chance to repair Parts", (Convert.ToInt32(ActionValues["RepairAmount"])).ToString());
         }
 
         public override object Clone()
         {
             RepairShip copy = new RepairShip();
-            //copy.TargetPart = (BasePart)this.TargetPart?.Clone();
-            //copy.TargetShip = (Ship)this.TargetShip?.Clone();
             copy.ActionValues = (CloneableDictionary<string, object>)this.ActionValues.Clone();
             return copy;
 
@@ -60,10 +59,6 @@ namespace CodeFighter.Logic.Actions
             this.ActionValues = new CloneableDictionary<string, object>();
             this.ActionValues["RepairAmount"] = amount;
         }
-        /// <summary>
-        /// Instantiates RepairTargetEidos with specified ActionValues.
-        /// </summary>
-        /// <param name="ActionValues">ActionValues[0] will be cast to int as the amount to repair</param>
         public RepairShip(Ship targetShip, CloneableDictionary<string,object> actionValues)
         {
             this.TargetShip = targetShip;

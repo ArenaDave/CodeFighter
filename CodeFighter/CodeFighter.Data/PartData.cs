@@ -11,6 +11,7 @@ namespace CodeFighter.Data
     {
         [Key]
         public int Id { get; set; }
+        public string Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int MaxHP { get; set; }
@@ -31,6 +32,6 @@ namespace CodeFighter.Data
         public bool IsPointDefense { get; set; }
 
         public ICollection<ActionData> ActionData { get; set; }
-        public ICollection<ShipData> ShipData { get; set; }
+        public ICollection<ShipPartData> ShipPartData { get; set; }
     }
 }

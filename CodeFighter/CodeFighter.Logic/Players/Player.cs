@@ -1,4 +1,5 @@
 ﻿using CodeFighter.Logic.Ships;
+using CodeFighter.Logic.Simulations;
 using System;
 using System.Collections.Generic;
 
@@ -6,12 +7,16 @@ namespace CodeFighter.Logic.Players
 {
     public class Player : ICloneable
     {
+        #region Public Properties
         public int ID { get; set; }
         public Guid PlayerID { get; set; }
         public string Name { get; set; }
-        public bool IsAI { get; private set; }
+        public bool IsAI { get; internal set; }
         public bool IsDefeated { get; set; }
+        public IGameLogic GameLogic { get; set; }
+        #endregion
 
+        #region Public Methods
         public override string ToString()
         {
             return this.Name;
@@ -27,8 +32,9 @@ namespace CodeFighter.Logic.Players
             copy.IsDefeated = this.IsDefeated;
             return copy;
         }
+        #endregion
 
-        public dynamic GameLogic;
+        #region Constructors
         public Player()
         {
 
@@ -37,7 +43,9 @@ namespace CodeFighter.Logic.Players
         {
             this.IsAI = isAI;
         }
+        #endregion
 
+        #region Operators
         public override bool Equals(object obj)
         {
             if(obj is Player)
@@ -63,5 +71,6 @@ namespace CodeFighter.Logic.Players
         {
             return !(left == right);
         }
+        #endregion
     }
 }

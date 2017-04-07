@@ -172,6 +172,7 @@ namespace CodeFighter.Logic.Players
             return orders;
         }
 
+        // Effective Hitpoints
         private double getEHP(Ship targetShip)
         {
             double result = 0;
@@ -187,6 +188,7 @@ namespace CodeFighter.Logic.Players
             return result;
         }
 
+        // Damage Per Round
         private double getDPR(Ship currentShip)
         {
             double result = 0;
@@ -206,6 +208,7 @@ namespace CodeFighter.Logic.Players
             return result;
         }
 
+        // Regeneration
         private double getRegen(Ship targetShip)
         {
             double result = 0;

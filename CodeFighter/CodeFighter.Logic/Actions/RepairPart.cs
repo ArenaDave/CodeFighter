@@ -12,7 +12,7 @@ namespace CodeFighter.Logic.Actions
         #region Public Methods
         public override string DoAction()
         {
-            int repairAmount = (int)ActionValues["RepairAmount"];
+            int repairAmount = Convert.ToInt32(ActionValues["RepairAmount"]);
             if (this.TargetPart.HP.Current < this.TargetPart.HP.Max)
             {
                 if (this.TargetPart.HP.Current <= this.TargetPart.HP.Max - repairAmount)
@@ -31,14 +31,12 @@ namespace CodeFighter.Logic.Actions
 
         public override string ToString()
         {
-            return string.Format("Repair this Part for {0} HPs", ((int)ActionValues["RepairAmount"]).ToString());
+            return string.Format("Repair this Part for {0} HPs", (Convert.ToInt32(ActionValues["RepairAmount"])).ToString());
         }
 
         public override object Clone()
         {
             RepairPart copy = new RepairPart();
-            //copy.TargetPart = (BasePart)this.TargetPart?.Clone();
-            //copy.TargetShip = (Ship)this.TargetShip?.Clone();
             copy.ActionValues = (CloneableDictionary<string, object>)this.ActionValues.Clone();
             return copy;
 

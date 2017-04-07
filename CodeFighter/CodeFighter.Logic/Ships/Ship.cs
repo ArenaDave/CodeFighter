@@ -1,4 +1,5 @@
-﻿using CodeFighter.Logic.Animations;
+﻿using CodeFighter.Data;
+using CodeFighter.Logic.Animations;
 using CodeFighter.Logic.Parts;
 using CodeFighter.Logic.Players;
 using CodeFighter.Logic.Simulations;
@@ -33,7 +34,7 @@ namespace CodeFighter.Logic.Ships
         public Point Position { get; set; }
         public ShipHull Hull { get; set; }
         public StatWithMax HP { get { return this.Hull.HullPoints; } set { this.Hull.HullPoints = value; } }
-        public StatWithMax MP { get; private set; }
+        public StatWithMax MP { get; internal set; }
         public double TotalMass
         {
             get
@@ -76,7 +77,7 @@ namespace CodeFighter.Logic.Ships
         #endregion
 
         #region Constructor
-        private Ship()
+        internal Ship()
         {
 
         }
@@ -92,6 +93,7 @@ namespace CodeFighter.Logic.Ships
             this.IsDestroyed = false;
             this.MP = new StatWithMax(MaxMP);
         }
+        
         #endregion
 
         public IGameLogic GameLogic { get; internal set; }

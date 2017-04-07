@@ -22,89 +22,25 @@ namespace CodeFighter.Logic.Simulations
         Scenario currentScenario;
         List<Animation> results;
 
-        public Simulation(Scenario scenario, Player player)
+        public Simulation(Guid scenarioGUID, Guid playerGUID, object playerLogic)
         {
-            // scenario
-            currentScenario = scenario;
-            currentScenario.RoundLimit = 30;
-
-            // players
-            enemyPlayer = new Player(true);
-            enemyPlayer.ID = -1;
-            enemyPlayer.Name = "Xorn";
-            currentPlayer = player;
-
-
+            // get player
+            currentPlayer = DataFactory.GetPlayer(playerGUID);
+            // TODO: add player logic, and/or logic per ship
+            currentPlayer.GameLogic = new EnemyLogic();
+            enemyPlayer = new Player(true) { ID = -1, Name = "Xorn" };
+            enemyPlayer.GameLogic = new EnemyLogic();
+            // get scenario
+            currentScenario = DataFactory.GetScenario(scenarioGUID, currentPlayer, enemyPlayer);
 
             // features
-            // TODO: load features scenario
-            Features.AddRange(getAsteroids());
+            Features.AddRange(currentScenario.Features);
 
             // ships
-            // TODO: load from scenario
-            Ships.Add(getShip(currentPlayer, 0, "Iowa", "BB", 40, "UNSC Missouri", new Point(5, 5)));
-            Ships.Add(getShip(enemyPlayer, 1, "Bunker", "BB", 40, "Alpha-01", new Point(20, 20)));
-            // TODO: add Game Logic to player's ships
+            Ships.AddRange(currentScenario.Ships);
+
         }
-
-        private List<Feature> getAsteroids()
-        {
-            List<Feature> results = new List<Feature>();
-            int lastID = 0;
-            using (RNG rng = new RNG())
-                for (int x = 0; x < 25; x++)
-                    for (int y = 0; y < 25; y++)
-                    {
-                        if (rng.d100() > 90)
-                        {
-                            Feature f = new Feature();
-                            f.ID = ++lastID;
-                            f.IsBlocking = true;
-                            f.Position = new Point(x, y);
-                            f.Type = FeatureType.Asteroid;
-                            results.Add(f);
-                        }
-                    }
-            return results;
-        }
-
-        // placeholder until we load from scenarios
-        private static Ship getShip(Player currentPlayer, int ID, string hullName, string hullSize, int hp, string name, Point origin)
-        {
-            ShipHull hull = new ShipHull(hullName, hullSize, hp);
-            Ship ship = new Ship(ID, name, currentPlayer, hull, null, origin);
-
-            List<BasePart> partsList = new List<BasePart>();
-            // weapons
-            partsList.Add(new WeaponPart("Laser Beam", 1, 50, new List<BaseAction>(), 5, 2, DamageType.Energy, FiringType.Beam, 2, 0, true));
-            partsList.Add(new WeaponPart("Laser Beam", 1, 50, new List<BaseAction>(), 5, 2, DamageType.Energy, FiringType.Beam, 2, 0, true));
-            partsList.Add(new WeaponPart("Plasma Cannon", 1, 50, new List<BaseAction>(), 12, 3, DamageType.Plasma, FiringType.Cannon, 3, 1, false));
-            partsList.Add(new WeaponPart("Torpedo", 1, 50, new List<BaseAction>(), 20, 5, DamageType.Explosive, FiringType.Torpedo, 2, 3, true));
-            // defenses
-            DefensePart shieldGenerator = new DefensePart("Shield Generator", 15, 50, 1, "Down", "Penetrating", new List<BaseAction>());
-            shieldGenerator.Actions.Add(new RepairPart(shieldGenerator, 2));
-            partsList.Add(shieldGenerator);
-            DefensePart shieldGenerator2 = new DefensePart("Shield Generator", 15, 50, 1, "Down", "Penetrating", new List<BaseAction>());
-            shieldGenerator2.Actions.Add(new RepairPart(shieldGenerator2, 2));
-            partsList.Add(shieldGenerator2);
-            partsList.Add(new DefensePart("Armor Plating", 15, 50, 3, "Destroyed", "Shattering", new List<BaseAction>()));
-            // actions
-            partsList.Add(new ActionPart("Damage Control", 1, 50, "Regen: 5 HPs", new List<BaseAction>() { new RepairShip(ship, 5) }));
-            // engines
-            partsList.Add(new EnginePart("DU-9 Thruster", 1, 50, new List<BaseAction>(), 250));
-            partsList.Add(new EnginePart("DU-9 Thruster", 1, 50, new List<BaseAction>(), 250));
-            partsList.Add(new EnginePart("DU-9 Thruster", 1, 50, new List<BaseAction>(), 250));
-            partsList.Add(new EnginePart("DU-9 Thruster", 1, 50, new List<BaseAction>(), 250));
-            partsList.Add(new EnginePart("DU-9 Thruster", 1, 50, new List<BaseAction>(), 250));
-            partsList.Add(new EnginePart("DU-9 Thruster", 1, 50, new List<BaseAction>(), 250));
-            ship.Parts = partsList;
-
-            //game logic
-            ship.GameLogic = new EnemyLogic();
-            ship.Owner = currentPlayer;
-            return ship;
-        }
-
+                
         public List<Animation> Run()
         {
             // reset animations

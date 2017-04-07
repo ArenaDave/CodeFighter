@@ -1,4 +1,5 @@
-﻿using CodeFighter.Logic.Utility;
+﻿using CodeFighter.Data;
+using CodeFighter.Logic.Utility;
 using System;
 
 namespace CodeFighter.Logic.Scenarios
@@ -24,6 +25,16 @@ namespace CodeFighter.Logic.Scenarios
             copy.IsBlocking = this.IsBlocking;
 
             return copy;
+        }
+
+        public Feature() { }
+
+        public Feature(ScenarioFeatureData data)
+        {
+            this.ID = data.Id;
+            this.Type = data.Feature.Type;
+            this.Position = new Point(data.PositionX, data.PositionY);
+            this.IsBlocking = data.Feature.IsBlocking;
         }
     }
 }

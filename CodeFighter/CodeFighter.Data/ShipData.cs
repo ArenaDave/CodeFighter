@@ -16,7 +16,7 @@ namespace CodeFighter.Data
         public int ShipHullDataId { get; set; }
         public ShipHullData ShipHull { get; set; }
 
-        public ICollection<PartData> Parts { get; set; }
+        public ICollection<ShipPartData> Parts { get; set; }
 
         public ICollection<ScenarioShipData> ScenarioShipData { get; set; }
     }

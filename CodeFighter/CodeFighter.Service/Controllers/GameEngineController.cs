@@ -1,12 +1,10 @@
-﻿using CodeFighter.Logic;
+﻿using CodeFighter.Data;
 using CodeFighter.Logic.Animations;
-using CodeFighter.Logic.Players;
-using CodeFighter.Logic.Scenarios;
 using CodeFighter.Logic.Simulations;
-using CodeFighter.Logic.Utility;
 using CodeFighter.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -59,16 +57,23 @@ namespace CodeFighter.Controllers
 
         private bool validatePlayerID(Guid playerID)
         {
-            return true;
+            using (CodeFighterContext db = new CodeFighterContext())
+            {
+                return db.PlayerData.Any(x => x.PlayerGUID.Equals(playerID));
+            }
         }
 
         private bool validateScenarioID(Guid scenarioID)
         {
-            return scenarioID == Guid.Empty;
+            using (CodeFighterContext db = new CodeFighterContext())
+            {
+                return db.ScenarioData.Any(x => x.ScenarioGUID.Equals(scenarioID));
+            }
         }
 
         private object processPlayerCode(string playerCode)
         {
+            // TODO: add CS-Script processing
             return null;
         }
 
@@ -77,80 +82,15 @@ namespace CodeFighter.Controllers
             // animation results are what are sent to the client
             List<Animation> result = new List<Animation>();
 
-            // get scenario
-            Scenario currentScenario = getScenario(scenarioID);
-            // get player
-            Player currentPlayer = getPlayer(playerID);
-
-
             // setup simulation
-            Simulation sim = new Simulation(currentScenario, currentPlayer);
+            Simulation sim = new Simulation(scenarioID, playerID, processedCode);
 
             // run simulation
             result.AddRange(sim.Run());
 
-
-            #region HARD CODED
-            //Point zeroLoc = new Point(5, 5);
-            //Point oneLoc = new Point(10, 10);
-
-            //// add ships
-            //result.Add(new Animation(AnimationActionType.Add, new AnimationAddDetails(0, zeroLoc, false, 2)));
-            //result.Add(new Animation(AnimationActionType.Add, new AnimationAddDetails(1, oneLoc, true, 2)));
-
-            //// ship 0 turn 1
-            //zeroLoc.Offset(1, 1);
-            //result.Add(new Animation(AnimationActionType.Move, new AnimationMoveDetails(0, zeroLoc)));
-            //List<AnimationShotDetails> shots1 = new List<AnimationShotDetails>();
-            //shots1.Add(new AnimationShotDetails(0, 1, true, false));
-            //shots1.Add(new AnimationShotDetails(0, 1, false, false));
-            //shots1.Add(new AnimationShotDetails(0, 1, true, true));
-            //shots1.Add(new AnimationShotDetails(0, 1, true, false));
-
-            //result.Add(new Animation(AnimationActionType.Shoot, new AnimationShootingDetails(shots1)));
-
-            //// ship 1 turn 1
-            //oneLoc.Offset(-1, -1);
-            //result.Add(new Animation(AnimationActionType.Move, new AnimationMoveDetails(1, oneLoc)));
-            //List<AnimationShotDetails> shots2 = new List<AnimationShotDetails>();
-            //shots2.Add(new AnimationShotDetails(1, 0, true, false));
-            //shots2.Add(new AnimationShotDetails(1, 0, false, false));
-            //shots2.Add(new AnimationShotDetails(1, 0, true, true));
-            //shots2.Add(new AnimationShotDetails(1, 0, true, false));
-
-            //result.Add(new Animation(AnimationActionType.Shoot, new AnimationShootingDetails(shots2)));
-
-            //// ship 0 turn 2
-            //zeroLoc.Offset(1, 1);
-            //result.Add(new Animation(AnimationActionType.Move, new AnimationMoveDetails(0, zeroLoc)));
-            //List<AnimationShotDetails> shots3 = new List<AnimationShotDetails>();
-            //shots3.Add(new AnimationShotDetails(0, 1, true, false));
-            //shots3.Add(new AnimationShotDetails(0, 1, false, false));
-            //shots3.Add(new AnimationShotDetails(0, 1, true, true));
-            //shots3.Add(new AnimationShotDetails(0, 1, true, false));
-
-            //result.Add(new Animation(AnimationActionType.Shoot, new AnimationShootingDetails(shots3)));
-            //result.Add(new Animation(AnimationActionType.Kill, new AnimationKillDetails(1)));
-
-            //// ship 1 is dead!
-
-            //// ship 0 turn 3
-            //zeroLoc.Offset(-1, 0);
-            //result.Add(new Animation(AnimationActionType.Move, new AnimationMoveDetails(0, zeroLoc)));
-
-            #endregion
-
             return result;
         }
 
-        private Scenario getScenario(Guid scenarioID)
-        {
-            return new Scenario();
-        }
 
-        private Player getPlayer(Guid playerID)
-        {
-            return new Player() { Name = "Bob" };
-        }
     }
 }

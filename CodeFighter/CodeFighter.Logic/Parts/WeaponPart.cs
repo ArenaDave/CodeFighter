@@ -4,6 +4,7 @@ using CodeFighter.Logic.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using CodeFighter.Data;
 
 namespace CodeFighter.Logic.Parts
 {
@@ -130,11 +131,9 @@ namespace CodeFighter.Logic.Parts
         public override object Clone()
         {
             WeaponPart copy = new WeaponPart();
-            copy.partID = this.partID;
             copy.Name = (string)this.Name.Clone();
             copy.HP = (StatWithMax)this.HP.Clone();
             copy.IsDestroyed = this.IsDestroyed;
-            //copy.Target = (Ship)this.Target.Clone();
             copy.Mass = this.Mass;
             copy.Actions = (List<BaseAction>)this.Actions?.Clone();
             copy.currentReload = this.currentReload;
@@ -163,6 +162,17 @@ namespace CodeFighter.Logic.Parts
             this.IsPointDefense = pointDefense;
         }
         private WeaponPart() : base() { }
+        public WeaponPart(PartData data, List<BaseAction> actions)
+            : base(data, actions)
+        {
+            this.WeaponDamage = data.WeaponDamage;
+            this.CritMultiplier = data.CritMultiplier;
+            this.ReloadTime = data.ReloadTime;
+            this.DamageType = data.DamageType;
+            this.FiringType = data.FiringType;
+            this.Range = data.Range;
+            this.IsPointDefense = data.IsPointDefense;
+        }
         #endregion
 
 

@@ -13,7 +13,7 @@ namespace CodeFighter.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201704070412199_Initialize"; }
+            get { return "201704071708267_Initialize"; }
         }
         
         string IMigrationMetadata.Source

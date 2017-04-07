@@ -177,8 +177,8 @@ function initBackground() {
 function getActions() {
     // build payload to send
     var data = {
-        scenarioID: '00000000-0000-0000-0000-000000000000',
-        playerID: '00000000-0000-0000-0000-000000000000',
+        scenarioID: '508E62F3-5B0E-4716-8B8D-FBCA000317A2',
+        playerID: '550D672D-F40A-4A13-9212-DEB4CFE27F2D',
         playerCode: 'dostuff'
     };
     // prep request for POST

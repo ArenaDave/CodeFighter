@@ -1,4 +1,5 @@
-﻿using CodeFighter.Logic.Actions;
+﻿using CodeFighter.Data;
+using CodeFighter.Logic.Actions;
 using CodeFighter.Logic.Ships;
 using CodeFighter.Logic.Utility;
 using System;
@@ -24,11 +25,9 @@ namespace CodeFighter.Logic.Parts
         public override object Clone()
         {
             ActionPart copy = new ActionPart();
-            copy.partID = this.partID;
             copy.Name = (string)this.Name.Clone();
             copy.HP = (StatWithMax)this.HP.Clone();
             copy.IsDestroyed = this.IsDestroyed;
-            //copy.Target = (Ship)this.Target.Clone();
             copy.Mass = this.Mass;
             copy.Actions = (List<BaseAction>)this.Actions.Clone();
             copy.Description = (string)this.Description.Clone();
@@ -45,6 +44,12 @@ namespace CodeFighter.Logic.Parts
         }
 
         private ActionPart():base() { }
+
+        public ActionPart(PartData data, List<BaseAction> actions)
+            :base(data,actions)
+        {
+            Description = data.Description;
+        }
         #endregion
 
         

@@ -12,6 +12,7 @@ namespace CodeFighter.Data.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
+                        Type = c.String(),
                         Name = c.String(),
                         Description = c.String(),
                         ActionValuesJSON = c.String(),
@@ -25,6 +26,7 @@ namespace CodeFighter.Data.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
+                        Type = c.String(),
                         Name = c.String(),
                         Description = c.String(),
                         MaxHP = c.Int(nullable: false),
@@ -42,6 +44,20 @@ namespace CodeFighter.Data.Migrations
                         IsPointDefense = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.ShipPartDatas",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        PartDataId = c.Int(nullable: false),
+                        ShipDataId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.PartDatas", t => t.PartDataId, cascadeDelete: true)
+                .ForeignKey("dbo.ShipDatas", t => t.ShipDataId, cascadeDelete: true)
+                .Index(t => t.PartDataId)
+                .Index(t => t.ShipDataId);
             
             CreateTable(
                 "dbo.ShipDatas",
@@ -162,19 +178,6 @@ namespace CodeFighter.Data.Migrations
                 .Index(t => t.PartData_Id)
                 .Index(t => t.ActionData_Id);
             
-            CreateTable(
-                "dbo.ShipDataPartDatas",
-                c => new
-                    {
-                        ShipData_Id = c.Int(nullable: false),
-                        PartData_Id = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => new { t.ShipData_Id, t.PartData_Id })
-                .ForeignKey("dbo.ShipDatas", t => t.ShipData_Id, cascadeDelete: true)
-                .ForeignKey("dbo.PartDatas", t => t.PartData_Id, cascadeDelete: true)
-                .Index(t => t.ShipData_Id)
-                .Index(t => t.PartData_Id);
-            
         }
         
         public override void Down()
@@ -186,12 +189,10 @@ namespace CodeFighter.Data.Migrations
             DropForeignKey("dbo.ScenarioShipDatas", "ScenarioDataId", "dbo.ScenarioDatas");
             DropForeignKey("dbo.ScenarioFeatureDatas", "ScenarioDataId", "dbo.ScenarioDatas");
             DropForeignKey("dbo.ScenarioFeatureDatas", "FeatureDataId", "dbo.FeatureDatas");
-            DropForeignKey("dbo.ShipDataPartDatas", "PartData_Id", "dbo.PartDatas");
-            DropForeignKey("dbo.ShipDataPartDatas", "ShipData_Id", "dbo.ShipDatas");
+            DropForeignKey("dbo.ShipPartDatas", "ShipDataId", "dbo.ShipDatas");
+            DropForeignKey("dbo.ShipPartDatas", "PartDataId", "dbo.PartDatas");
             DropForeignKey("dbo.PartDataActionDatas", "ActionData_Id", "dbo.ActionDatas");
             DropForeignKey("dbo.PartDataActionDatas", "PartData_Id", "dbo.PartDatas");
-            DropIndex("dbo.ShipDataPartDatas", new[] { "PartData_Id" });
-            DropIndex("dbo.ShipDataPartDatas", new[] { "ShipData_Id" });
             DropIndex("dbo.PartDataActionDatas", new[] { "ActionData_Id" });
             DropIndex("dbo.PartDataActionDatas", new[] { "PartData_Id" });
             DropIndex("dbo.PlayerScenarioDatas", new[] { "ScenarioDataId" });
@@ -201,7 +202,8 @@ namespace CodeFighter.Data.Migrations
             DropIndex("dbo.ScenarioShipDatas", new[] { "ShipDataId" });
             DropIndex("dbo.ScenarioShipDatas", new[] { "ScenarioDataId" });
             DropIndex("dbo.ShipDatas", new[] { "ShipHullDataId" });
-            DropTable("dbo.ShipDataPartDatas");
+            DropIndex("dbo.ShipPartDatas", new[] { "ShipDataId" });
+            DropIndex("dbo.ShipPartDatas", new[] { "PartDataId" });
             DropTable("dbo.PartDataActionDatas");
             DropTable("dbo.PlayerScenarioDatas");
             DropTable("dbo.PlayerDatas");
@@ -211,6 +213,7 @@ namespace CodeFighter.Data.Migrations
             DropTable("dbo.ScenarioDatas");
             DropTable("dbo.ScenarioShipDatas");
             DropTable("dbo.ShipDatas");
+            DropTable("dbo.ShipPartDatas");
             DropTable("dbo.PartDatas");
             DropTable("dbo.ActionDatas");
         }
