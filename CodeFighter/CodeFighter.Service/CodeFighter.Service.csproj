@@ -229,6 +229,12 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="images\asteroid1.png" />
+    <Content Include="images\asteroid2.png" />
+    <Content Include="images\asteroid3.png" />
+    <Content Include="images\asteroid4.png" />
+    <Content Include="images\asteroid5.png" />
+    <Content Include="images\asteroid6.png" />
     <Content Include="images\enemy2.png" />
     <Content Include="images\explosion.png" />
     <Content Include="images\Galaxy_star_field1.png" />
