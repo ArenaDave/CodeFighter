@@ -16,6 +16,7 @@ namespace CodeFighter.Logic.Orders
         
         public Ship CurrentShip { get; internal set; }
         internal Simulation Simulation { get; set; }
+        public abstract int Priority { get; }
 
         internal abstract void ExecuteOrder();
         public abstract override string ToString();

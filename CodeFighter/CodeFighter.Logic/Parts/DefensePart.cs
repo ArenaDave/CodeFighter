@@ -21,7 +21,7 @@ namespace CodeFighter.Logic.Parts
         #region Public Methods
         public override string ToString()
         {
-            return string.Format("{0} (DR:{1}) (HP:{2}/{3})", this.Name, DR.ToString(), HP.Current.ToString(), HP.Max.ToString());
+            return string.Format("{0} (DR:{1}) (HP:{2}/{3}){4}", this.Name, DR.ToString(), HP.Current.ToString(), HP.Max.ToString(), this.IsDestroyed ? " [DESTROYED!]" : "");
         }
         /// <summary>
         /// Handles incoming damage
@@ -92,7 +92,7 @@ namespace CodeFighter.Logic.Parts
         }
         private DefensePart() : base() { }
         public DefensePart(PartData data, List<BaseAction> actions)
-            : base(data,actions)
+            : base(data, actions)
         {
             this.DR = data.DR;
             this.DownAdjective = data.DownAdjective;

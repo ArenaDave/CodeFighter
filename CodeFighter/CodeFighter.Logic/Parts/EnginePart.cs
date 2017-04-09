@@ -16,7 +16,7 @@ namespace CodeFighter.Logic.Parts
         #region Public Methods
         public override string ToString()
         {
-            return string.Format("{0} ({1}kN/s)", this.Name, Thrust.ToString("0.0"));
+            return string.Format("{0} ({1}kN/s){2}", this.Name, Thrust.ToString("0.0"), this.IsDestroyed ? " [DESTROYED!]" : "");
         }
 
         public override object Clone()
@@ -42,7 +42,7 @@ namespace CodeFighter.Logic.Parts
         public EnginePart() : base() { }
 
         public EnginePart(PartData data, List<BaseAction> actions)
-            : base(data,actions)
+            : base(data, actions)
         {
             this.Thrust = data.Thrust;
         }

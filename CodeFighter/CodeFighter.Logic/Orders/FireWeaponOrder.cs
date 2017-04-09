@@ -16,14 +16,16 @@ namespace CodeFighter.Logic.Orders
         public int TargetID { get; set; }
         public bool IsHit { get; set; }
         public bool IsCrit { get; set; }
+        public string FiringType { get; set; }
 
-        public WeaponFiredEventArgs(int shooterId, int targetId, bool isHit, bool isCrit, List<string> messages)
+        public WeaponFiredEventArgs(int shooterId, int targetId, bool isHit, bool isCrit, string firingType, List<string> messages)
             : base(messages)
         {
             this.ShooterID = shooterId;
             this.TargetID = targetId;
             this.IsHit = isHit;
             this.IsCrit = isCrit;
+            this.FiringType = firingType;
         }
     }
 
@@ -40,6 +42,7 @@ namespace CodeFighter.Logic.Orders
         #region Public Properties
         public Ship TargetShip { get; set; }
         public WeaponPart WeaponToFire { get; set; }
+        public override int Priority { get { return 0; } }
         #endregion
 
         #region Public Methods
@@ -82,7 +85,7 @@ namespace CodeFighter.Logic.Orders
                     WeaponToFire.Target = TargetShip;
                     AttackResult attackResult = WeaponToFire.Fire();
                     result = result.Concat(attackResult.Messages).ToList<string>();
-                    OnWeaponFired?.Invoke(this, new WeaponFiredEventArgs(CurrentShip.ID, TargetShip.ID, attackResult.IsHit, attackResult.IsCrit, result));
+                    OnWeaponFired?.Invoke(this, new WeaponFiredEventArgs(CurrentShip.ID, TargetShip.ID, attackResult.IsHit, attackResult.IsCrit, WeaponToFire.FiringType, result));
                     if (attackResult.TargetDestroyed)
                     {
                         OnTargetDestroyed?.Invoke(this, new ShipEventArgs(TargetShip.ID, new List<string>() { string.Format("{0} was destroyed by this attack!", TargetShip.ToString()) }));

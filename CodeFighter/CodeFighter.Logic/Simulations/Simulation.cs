@@ -110,7 +110,7 @@ namespace CodeFighter.Logic.Simulations
                             }
 
                             // resolve orders
-                            foreach (BaseOrder order in orders)
+                            foreach (BaseOrder order in orders.OrderBy(x=>x.Priority))
                             {
                                 if (!Ships.Any(x => !x.IsDestroyed && x.Owner == currentPlayer) || !Ships.Any(x => !x.IsDestroyed && x.Owner == enemyPlayer))
                                     continue;
@@ -209,7 +209,7 @@ namespace CodeFighter.Logic.Simulations
         public void WeaponFiredHandler(object sender, WeaponFiredEventArgs e)
         {
             List<AnimationShotDetails> shots = new List<AnimationShotDetails>();
-            shots.Add(new AnimationShotDetails(e.ShooterID, e.TargetID, e.IsHit, e.IsCrit));
+            shots.Add(new AnimationShotDetails(e.ShooterID, e.TargetID, e.IsHit, e.IsCrit,e.FiringType));
             results.Add(new Animation(AnimationActionType.Shoot, new AnimationShootingDetails(shots), e.Messages));
             results.Add(new Animation(AnimationActionType.ShipUpdate, new AnimationShipUpdateDetails(Ships.First(x => x.ID == e.ShooterID))));
             results.Add(new Animation(AnimationActionType.ShipUpdate, new AnimationShipUpdateDetails(Ships.First(x => x.ID == e.TargetID))));

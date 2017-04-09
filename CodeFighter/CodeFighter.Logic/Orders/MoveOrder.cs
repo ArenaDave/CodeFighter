@@ -33,6 +33,7 @@ namespace CodeFighter.Logic.Orders
 
         #region Public Properties
         public Point TargetPosition { get; private set; }
+        public override int Priority { get { return 2; } }
         #endregion
 
         #region Public Methods

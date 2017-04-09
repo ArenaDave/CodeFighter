@@ -55,7 +55,7 @@ namespace CodeFighter.Data.Migrations
 
             // actions
             //** damage control
-            var damageControl = new PartData() { Id = 6, Type = "Action", Name = "Damage Control", Description = "Fix The Broken Parts", MaxHP = 1, Mass = 50, ActionData = new List<ActionData>() { repairShip } };
+            var damageControl = new PartData() { Id = 6, Type = "Action", Name = "Damage Control", Description = "Repair 5HP per round, 50% chance to repair a destroyed part", MaxHP = 1, Mass = 50, ActionData = new List<ActionData>() { repairShip } };
 
             // engines
             //** thruster

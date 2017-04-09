@@ -21,6 +21,8 @@ var dir = ['W', 'NW', 'N', 'NE', 'E', 'SE', 'S', 'SW'];
 var backgroundTiles = [];
 var ships = [];
 var beamShots = [];
+var cannonShots = [];
+var torpedoShots = [];
 var explosions = [];
 var features = [];
 
@@ -29,18 +31,31 @@ var shipSpeed = 64;
 
 // magic numbers for beam weapon animations
 var rndBeamDeviation = 10;
-var defaultBeamDuration = 0.2;
-var defaultBeamRenderDelay = 0.1;
-var beamRenderDelayMaxRange = 0.1;
+var defaultBeamDuration = 0.7;
 var beamMissThickness = 1;
 var beamHitThickness = 2;
 var beamCritThickness = 3;
 var beamFriendlyColor = 'rgba(255,0,0,0.0)';
 var beamEnemyColor = 'rgba(0,255,0,0.0)';
+var cannonFriendlyColor = 'rgba(255,0,0,1.0)';
+var cannonEnemyColor = 'rgba(0,255,0,1.0)';
+
+// colors for messages
+var friendlyMoveMessageColor = '#2A506C';
+var friendlyCannonMessageColor = '#3F607A';
+var friendlyBeamMessageColor = '#587489';
+var friendlyTorpedoMessageColor = '#173F5D';
+var enemyMoveMessageColor = '#4B2E72';
+var enemyCannonMessageColor = '#735E90';
+var enemyBeamMessageColor = '#5E4481';
+var enemyTorpedoMessageColor = '#391A62';
+
 
 // flags to determine if the next action should be pulled
 var shipsDone = true;
 var beamsDone = true;
+var cannonsDone = true;
+var torpedoesDone = true;
 var explosionsDone = true;
 var maybeDone = false;
 
@@ -251,7 +266,15 @@ function beginNextAction() {
 
                 var isHit = action.details.shots[s].isHit;
                 var isCrit = action.details.shots[s].isCrit;
-                addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit);
+                if (action.details.shots[s].firingType == 'Beam') {
+                    addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit);
+                }
+                else if (action.details.shots[s].firingType == 'Cannon') {
+                    addCannonShot(originPosition, targetPosition, isEnemy, isHit, isCrit);
+                }
+                else if (action.details.shots[s].firingType == 'Torpedo') {
+                    addTorpedoShot(originPosition, targetPosition, isEnemy, isHit, isCrit);
+                }
             }
             else {
                 if (ships.filter(function (obj) { return obj.id == action.details.shots[s].target; }).length <= 0) {
@@ -263,7 +286,30 @@ function beginNextAction() {
             }
         }
         var messages = action.messages;
-        addMessages(messages);
+        var color = null;
+        if (originShip.isEnemy) {
+            if (action.details.shots[0].firingType == 'Beam') {
+                color = enemyBeamMessageColor;
+            }
+            else if (action.details.shots[0].firingType = 'Cannon') {
+                color = enemyCannonMessageColor;
+            }
+            else {
+                color = enemyTorpedoMessageColor;
+            }
+        }
+        else {
+            if (action.details.shots[0].firingType == 'Beam') {
+                color = friendlyBeamMessageColor;
+            }
+            else if (action.details.shots[0].firingType = 'Cannon') {
+                color = friendlyCannonMessageColor;
+            }
+            else {
+                color = friendlyTorpedoMessageColor;
+            }
+        }
+        addMessages(messages, color);
     }
     else if (action.actionType == 'move') {
         var shipID = action.details.id;
@@ -273,7 +319,17 @@ function beginNextAction() {
         var targetPosition = [action.details.x, action.details.y];
         moveShip(shipID, targetPosition);
         var messages = action.messages;
-        addMessages(messages);
+        var shipcandidates = ships.filter(function (obj) { return obj.id == shipID });
+        var color = null;
+        if (shipcandidates.length > 0) {
+            if (shipcandidates[0].isEnemy) {
+                color = enemyMoveMessageColor;
+            }
+            else {
+                color = friendlyMoveMessageColor;
+            }
+        }
+        addMessages(messages, color);
     }
     else if (action.actionType == 'ship') {
         var shipInfo = action.details;
@@ -296,12 +352,18 @@ function beginNextAction() {
     return true;
 }
 
-function addMessages(messages) {
+function addMessages(messages, color) {
     if (messages != null) {
         var div = document.createElement('div');
         div.className = 'innerMessage panel';
+        var prepend = '';
+        var postpend = '';
+        if (color != null) {
+            prepend = "<span style='color:" + color + "'>";
+            postpend = "</span>";
+        }
         for (var i = 0; i < messages.length; i++) {
-            div.innerHTML += messages[i];
+            div.innerHTML += prepend + messages[i] + postpend;
             if (i < messages.length - 1)
                 div.innerHTML += '<br/>';
         }
@@ -337,6 +399,8 @@ function gameLoop() {
     if (keepGoing) {
         updateShips(dt);
         updateBeams(dt);
+        updateCannons(dt);
+        updateTorpedoes(dt);
         updateExplosions(dt);
         updateFeatures(dt);
         renderAll();
@@ -346,7 +410,7 @@ function gameLoop() {
 
     // if we're done animating actions, get the next action
     var moreActions = true;
-    if (shipsDone && beamsDone && explosionsDone) {
+    if (shipsDone && beamsDone && cannonsDone && torpedoesDone && explosionsDone) {
         moreActions = beginNextAction();
     }
 
@@ -385,6 +449,8 @@ function renderAll() {
     renderLines(beamShots);
     renderEntities(explosions);
     renderEntities(features);
+    renderProjectiles(cannonShots, 3);
+    renderProjectiles(torpedoShots);
 }
 
 
@@ -411,7 +477,7 @@ function addShipDetail(shipInfo) {
     var reference = document.getElementById("shipTemplate");
     var div = document.createElement("div");
     div.id = "shipDetail" + shipInfo.id;
-    div.className = "shipTemplate col-xs-12 col-sm-6 col-lg-4";
+    div.className = "shipTemplate col-xs-12 col-sm-6";
     div.innerHTML = reference.innerHTML;
     if (shipInfo.ownerIsAI) {
         document.getElementById("enemyShipList").appendChild(div);
@@ -527,10 +593,9 @@ function updateShips(dt) {
 
     }
 }
-function updateShipDetail(shipInfo){
+function updateShipDetail(shipInfo) {
     var sd = document.getElementById("shipDetail" + shipInfo.id);
-    if(sd != null)
-    {
+    if (sd != null) {
         var shipName = sd.getElementsByClassName("shipName")[0];
         var shipSize = sd.getElementsByClassName("shipSize")[0];
         var className = sd.getElementsByClassName("className")[0];
@@ -539,7 +604,7 @@ function updateShipDetail(shipInfo){
         var shipParts = sd.getElementsByClassName("shipParts")[0];
 
         if (shipInfo.isDestroyed) {
-            shipName.innerHTML = "<s>"+shipInfo.name+"</s>";
+            shipName.innerHTML = "<s>" + shipInfo.name + "</s>";
         }
         else {
             shipName.innerHTML = shipInfo.name;
@@ -549,7 +614,7 @@ function updateShipDetail(shipInfo){
         shipHp.innerHTML = shipInfo.hp;
         shipPos.innerHTML = shipInfo.pos;
         shipParts.innerHTML = "";
-        for(var i=0;i<shipInfo.parts.length;i++) {
+        for (var i = 0; i < shipInfo.parts.length; i++) {
             shipParts.innerHTML += "<div>" + shipInfo.parts[i] + "</div>";
         }
 
@@ -580,24 +645,19 @@ function addBeamShot(originPosition, targetPosition, isEnemy, isHit, isCrit) {
         color = beamEnemyColor;
     }
 
-    // delay beam a random amount so that not all beams appear at once
-    var delay = defaultBeamRenderDelay + rollFloat(beamRenderDelayMaxRange);
-    
     // add to the array
     beamShots.push({
         lineWidth: thickness,
         strokeStyle: color,
         origin: [oX, oY],
         target: [tX, tY],
-        duration: defaultBeamDuration,
-        startingDuration: defaultBeamDuration,
-        renderDelay: delay
+        duration: 0,
+        totalDuration: defaultBeamDuration
     });
 
     // notify the system that one or more beams now exist and must be resolved
     beamsDone = false;
 }
-
 function randomizePoint(targetN) {
     // reusable
     // starting from the center of the cell, add or subtract a random deviation
@@ -609,34 +669,39 @@ function randomizePoint(targetN) {
     }
     return dN;
 }
-
+function easeInQuint(t) {
+    return Math.pow(t, 5);
+}
+function easeOutQuint(t) {
+    return 1 - easeInQuint(1 - t);
+}
+function easeInOutQuint(t) {
+    if (t < 0.5) return easeInQuint(t * 2.0) / 2.0;
+    return 1 - easeInQuint((1 - t) * 2.0) / 2.0;
+}
 function updateBeams(dt) {
     var toRemove = [];
     // update beams: if their duration is still longer than the delta-time, update; else mark to remove
     for (var i = 0; i < beamShots.length; i++) {
-        if (beamShots[i].renderDelay <= 0) {
-            if (beamShots[i].duration < dt) {
-                toRemove.push(beamShots[i]);
-            }
-            else {
-                var shot = beamShots[i];
-                beamShots[i].duration = shot.duration - dt;
-                // update alpha for fade in/out over duration
-                var colorArray = shot.strokeStyle.split(',');
-                var halfDuration = shot.startingDuration / 2;
-                var alpha = 0.0;
-                if (halfDuration <= shot.duration) { // ascending
-                    alpha = 1 - (shot.duration / shot.startingDuration);
-                }
-                else { // descending
-                    alpha = (shot.duration / shot.startingDuration);
-                }
-                var colorString = colorArray[0] + ',' + colorArray[1] + ',' + colorArray[2] + ',' + alpha.toFixed(2) + ')';
-                beamShots[i].strokeStyle = colorString;
-            }
+
+        if (beamShots[i].duration + dt > beamShots[i].totalDuration) {
+            toRemove.push(beamShots[i]);
         }
         else {
-            beamShots[i].renderDelay = beamShots[i].renderDelay - dt;
+            var shot = beamShots[i];
+            beamShots[i].duration = shot.duration + dt;
+            // update alpha for fade in/out over duration
+            var colorArray = shot.strokeStyle.split(',');
+            var halfDuration = shot.totalDuration / 2;
+            var alpha = 0.0;
+            if (shot.duration < halfDuration) {
+                alpha = easeInOutQuint(shot.duration / halfDuration);
+            }
+            else {
+                alpha = 1 - easeInOutQuint((shot.duration - halfDuration) / halfDuration);
+            }
+            var colorString = colorArray[0] + ',' + colorArray[1] + ',' + colorArray[2] + ',' + alpha.toFixed(2) + ')';
+            beamShots[i].strokeStyle = colorString;
         }
     }
     // if there are beams in the list, removing them might end the action
@@ -662,7 +727,181 @@ function updateBeams(dt) {
     }
 }
 
+// CANNONS
+function addCannonShot(originPosition, targetPosition, isEnemy, isHit, isCrit) {
+    // vary the origin & target points so the beams are slightly random
+    var oX = randomizePoint(originPosition[0]);
+    var oY = randomizePoint(originPosition[1]);
+    var tX = randomizePoint(targetPosition[0]);
+    var tY = randomizePoint(targetPosition[1]);
 
+    // thickness changes based on hit or crit
+    var thickness = beamMissThickness;
+    if (isHit) {
+        thickness = beamHitThickness;
+    }
+    if (isCrit) {
+        thickness = beamCritThickness;
+    }
+    // color based on friendly/enemy
+    var color = cannonFriendlyColor;
+    if (isEnemy) {
+        color = cannonEnemyColor;
+    }
+
+    // get the vertices
+    var vertices = [];
+    vertices.push({ x: oX, y: oY });
+    vertices.push({ x: tX, y: tY });
+    var points = calcWaypoints(vertices);
+
+    // add to the array
+    cannonShots.push({
+        lineWidth: thickness + beamMissThickness * 2,
+        strokeStyle: color,
+        t: 1,
+        points: points
+    });
+
+    // notify the system that one or more cannons now exist and must be resolved
+    cannonsDone = false;
+
+}
+function calcWaypoints(vertices) {
+    var waypoints = [];
+    for (var i = 1; i < vertices.length; i++) {
+        var pt0 = vertices[i - 1];
+        var pt1 = vertices[i];
+        var dx = pt1.x - pt0.x;
+        var dy = pt1.y - pt0.y;
+        for (var j = 0; j < 32; j++) {
+            var x = pt0.x + dx * j / 32;
+            var y = pt0.y + dy * j / 32;
+            waypoints.push({
+                x: x,
+                y: y
+            });
+        }
+    }
+    return (waypoints);
+}
+function updateCannons(dt) {
+    var toRemove = [];
+    // update cannons, if t > points.length+8 (last bullet), remove; else increase t
+    for (var i = 0; i < cannonShots.length; i++) {
+        //var cannon = cannonShots[i];
+        if (cannonShots[i].t >= cannonShots[i].points.length + 8) {
+            toRemove.push(cannonShots[i]);
+        }
+        else {
+            cannonShots[i].t = cannonShots[i].t + 48 * dt;
+        }
+
+    }
+    // if there are cannons in the list, removing them might end the action
+    maybeDone = false;
+    if (cannonShots.length > 0) {
+        maybeDone = true;
+    }
+
+    // remove expired cannons
+    for (var j = 0; j < toRemove.length; j++) {
+        var index = cannonShots.indexOf(toRemove[j]);
+        if (index > -1) {
+            cannonShots.splice(index, 1);
+        }
+    }
+
+    // if there are no more cannons but there were before we removed them, 
+    // then we just finished a firing action.
+    if (maybeDone) {
+        if (cannonShots.length == 0) {
+            cannonsDone = true;
+        }
+    }
+}
+
+// TORPEDOES
+function addTorpedoShot(originPosition, targetPosition, isEnemy, isHit, isCrit) {
+    // vary the origin & target points so the beams are slightly random
+    var oX = randomizePoint(originPosition[0]);
+    var oY = randomizePoint(originPosition[1]);
+    var tX = randomizePoint(targetPosition[0]);
+    var tY = randomizePoint(targetPosition[1]);
+
+    // thickness changes based on hit or crit
+    var thickness = beamMissThickness;
+    if (isHit) {
+        thickness = beamHitThickness;
+    }
+    if (isCrit) {
+        thickness = beamCritThickness;
+    }
+    // color based on friendly/enemy
+    var color = cannonFriendlyColor;
+    if (isEnemy) {
+        color = cannonEnemyColor;
+    }
+
+    // get the vertices
+    var vertices = [];
+    vertices.push({ x: oX, y: oY });
+    vertices.push({ x: tX, y: tY });
+    var points = calcWaypoints(vertices);
+
+    // add to the array
+    torpedoShots.push({
+        lineWidth: thickness + beamMissThickness * 2,
+        pulseLineWidth: thickness*2 + beamMissThickness * 2,
+        pulseCount: 0,
+        strokeStyle: color,
+        t: 1,
+        points: points
+    });
+
+    // notify the system that one or more cannons now exist and must be resolved
+    torpedoesDone = false;
+}
+function updateTorpedoes(dt) {
+    var toRemove = [];
+    // update torpedoes, if t > points.length, remove; else increase t
+    for (var i = 0; i < torpedoShots.length; i++) {
+        if (torpedoShots[i].t >= torpedoShots[i].points.length) {
+            toRemove.push(torpedoShots[i]);
+        }
+        else {
+            torpedoShots[i].t = torpedoShots[i].t + 32 * dt;
+            if (torpedoShots[i].pulseCount++ % 4 == 0) {
+                var pulse = torpedoShots[i].pulseLineWidth;
+                torpedoShots[i].pulseLineWidth = torpedoShots[i].lineWidth;
+                torpedoShots[i].lineWidth = pulse;
+            }
+        }
+
+    }
+
+    // if there are torpedoes in the list, removing them might end the action
+    maybeDone = false;
+    if (torpedoShots.length > 0) {
+        maybeDone = true;
+    }
+
+    // remove expired torpedoes
+    for (var j = 0; j < toRemove.length; j++) {
+        var index = torpedoShots.indexOf(toRemove[j]);
+        if (index > -1) {
+            torpedoShots.splice(index, 1);
+        }
+    }
+
+    // if there are no more torpedoes but there were before we removed them, 
+    // then we just finished a firing action.
+    if (maybeDone) {
+        if (torpedoShots.length == 0) {
+            torpedoesDone = true;
+        }
+    }
+}
 
 // EXPLOSIONS
 function addExplosion(position) {
@@ -681,7 +920,6 @@ function addExplosion(position) {
     // notify the system that one or more explosions now exist that must be resolved
     explosionsDone = false;
 }
-
 function updateExplosions(dt) {
     // if there are explosions in the list, removing them might end the action
     maybeDone = false;
@@ -717,7 +955,7 @@ function addFeature(featureDetails) {
         var randomAnimationStart = rollDice(16);
         var sequence = [];//[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
         for (var i = 0; i < 16; i++) {
-            sequence.push((randomAnimationStart+i) % 16);
+            sequence.push((randomAnimationStart + i) % 16);
         }
         var randomSpeed = rollDice(10);
 
@@ -733,7 +971,6 @@ function addFeature(featureDetails) {
         });
     }
 }
-
 function updateFeatures(dt) {
     for (var i = 0; i < features.length; i++) {
         features[i].sprite.update(dt);

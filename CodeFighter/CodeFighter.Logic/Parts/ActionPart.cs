@@ -19,7 +19,7 @@ namespace CodeFighter.Logic.Parts
         #region Public Methods
         public override string ToString()
         {
-            return string.Format("{0} ({1})", this.Name, Description);
+            return string.Format("{0} ({1}){2}", this.Name, Description, this.IsDestroyed ? " [DESTROYED!]" : "");
         }
 
         public override object Clone()

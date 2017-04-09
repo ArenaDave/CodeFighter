@@ -12,13 +12,15 @@ namespace CodeFighter.Logic.Animations
         public int target { get; set; }
         public bool isHit { get; set; }
         public bool isCrit { get; set; }
+        public string firingType { get; set; }
 
-        public AnimationShotDetails(int originShip, int targetShip, bool isHit, bool isCrit)
+        public AnimationShotDetails(int originShip, int targetShip, bool isHit, bool isCrit, string firingType)
         {
             origin = originShip;
             target = targetShip;
             this.isHit = isHit;
             this.isCrit = isCrit;
+            this.firingType = firingType;
         }
     }
 }
