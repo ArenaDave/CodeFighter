@@ -59,7 +59,7 @@ namespace CodeFighter.Data.Migrations
 
             // engines
             //** thruster
-            var thruster = new PartData() { Id = 7, Type = "Engine", Name = "DU-9 Thruster", Description = "Make It Go Faster!", MaxHP = 1, Mass = 50, Thrust = 250 };
+            var thruster = new PartData() { Id = 7, Type = "Engine", Name = "DU-1 Thruster", Description = "Make It Go Faster!", MaxHP = 1, Mass = 50, Thrust = 450 };
 
             context.PartData.AddOrUpdate(x => x.Id,
                 laserBeam,
@@ -71,10 +71,10 @@ namespace CodeFighter.Data.Migrations
                 thruster
             );
             #endregion
-
+            
             #region SHIPHULLS
-            var hullIowa = new ShipHullData() { Id = 1, ClassName = "Iowa", HullSize = "BB", MaxHP = 40 };
-            var hullBunker = new ShipHullData() { Id = 2, ClassName = "Bunker", HullSize = "BB", MaxHP = 40 };
+            var hullIowa = new ShipHullData() { Id = 1, ClassName = "Iowa", HullSize = "CO", MaxHP = 40 };
+            var hullBunker = new ShipHullData() { Id = 2, ClassName = "Bunker", HullSize = "CO", MaxHP = 40 };
 
             context.ShipHullData.AddOrUpdate(x => x.Id,
                 hullIowa,

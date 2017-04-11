@@ -26,7 +26,7 @@ namespace CodeFighter.Logic.Animations
             this.name = ship.Name;
             this.isDestroyed = ship.IsDestroyed;
             this.className = string.Format("{0}-class {1}",ship.Hull.ClassName, ship.Hull.Size.Name);
-            this.sizeName = ship.Hull.Size.Image;
+            this.sizeName = ship.Hull.Size.Designator;
             this.hp =string.Format("HP: {0}", ship.HP.ToString());
             this.pos = string.Format("Pos: {0}",ship.Position.ToString());
             this.parts = new List<string>();

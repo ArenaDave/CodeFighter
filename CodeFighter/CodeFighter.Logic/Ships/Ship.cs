@@ -33,14 +33,14 @@ namespace CodeFighter.Logic.Ships
         public List<BasePart> Parts { get; set; }
         public Point Position { get; set; }
         public ShipHull Hull { get; set; }
-        public StatWithMax HP { get { return this.Hull.HullPoints; } set { this.Hull.HullPoints = value; } }
+        public StatWithMax HP { get { return this.Hull.HullPoints; } }
         public StatWithMax MP { get; internal set; }
         public double TotalMass
         {
             get
             {
                 // mass of hull and all parts
-                double mass = Hull.Size.Mass;
+                double mass = Hull.Size.BaseMass;
                 foreach (var part in Parts)
                 {
                     if (part.IsDestroyed)
@@ -55,7 +55,6 @@ namespace CodeFighter.Logic.Ships
         {
             get
             {
-                // diminishing returns function of mass versus thrust
                 double totalThrust = 0;
                 if (Parts != null)
                     foreach (EnginePart part in Parts.Where(x => x is EnginePart))
@@ -65,11 +64,9 @@ namespace CodeFighter.Logic.Ships
                 if (totalThrust <= 0)
                     return 0;
 
-                double sizeCategory = Math.Log((TotalMass / 50), 4);
-                double engineCount = totalThrust / 100;
-                double MP = (-0.0332 * sizeCategory + 0.405) * engineCount + (-0.29093 * sizeCategory + 1.7867);
+                int MP = Convert.ToInt32(Math.Round(Hull.Size.Classification.Factor * totalThrust / TotalMass));
 
-                return Convert.ToInt32(Math.Round(MP));
+                return MP;
             }
         }
         // not sure how to calculate this yet
