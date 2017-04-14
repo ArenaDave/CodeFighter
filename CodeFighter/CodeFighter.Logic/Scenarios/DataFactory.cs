@@ -41,6 +41,9 @@ namespace CodeFighter.Logic.Scenarios
                     foreach (ScenarioShipData sd in scenario.Ships)
                     {
                         Ship ship = new Ship();
+                        // create hull
+                        ShipHull shipHull = new ShipHull(sd.Ship.ShipHull.ClassName, sd.Ship.ShipHull.HullSize);
+
                         // create parts
                         List<BasePart> parts = new List<BasePart>();
                         foreach (ShipPartData spd in sd.Ship.Parts)
@@ -51,16 +54,16 @@ namespace CodeFighter.Logic.Scenarios
                             switch (pd.Type)
                             {
                                 case "Weapon":
-                                    part = new WeaponPart(pd, actions);
+                                    part = new WeaponPart(pd, shipHull.Size.Classification, actions);
                                     break;
                                 case "Defense":
-                                    part = new DefensePart(pd, actions);
+                                    part = new DefensePart(pd, shipHull.Size.Classification, actions);
                                     break;
                                 case "Action":
-                                    part = new ActionPart(pd, actions);
+                                    part = new ActionPart(pd, shipHull.Size.Classification, actions);
                                     break;
                                 case "Engine":
-                                    part = new EnginePart(pd, actions);
+                                    part = new EnginePart(pd, shipHull.Size.Classification, actions);
                                     break;
                             }
 
@@ -84,8 +87,7 @@ namespace CodeFighter.Logic.Scenarios
                             parts.Add(part);
                         }
 
-                        // create hull
-                        ShipHull shipHull = new ShipHull(sd.Ship.ShipHull.ClassName, sd.Ship.ShipHull.HullSize, sd.Ship.ShipHull.MaxHP);
+                        
 
                         Point origin = new Point(sd.StartingPositionX, sd.StartingPositionY);
 

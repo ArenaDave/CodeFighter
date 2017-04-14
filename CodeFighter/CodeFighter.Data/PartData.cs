@@ -15,21 +15,11 @@ namespace CodeFighter.Data
         public string Name { get; set; }
         public string Description { get; set; }
         public int MaxHP { get; set; }
-        public double Mass { get; set; }
-
-        public int DR { get; set; }
-        public string DownAdjective { get; set; }
-        public string PenetrateVerb { get; set; }
-
-        public double Thrust { get; set; }
-
-        public int WeaponDamage { get; set; }
-        public int CritMultiplier { get; set; }
-        public int ReloadTime { get; set; }
+        
+        public string DefenseType { get; set; }
+        
         public string DamageType { get; set; }
         public string FiringType { get; set; }
-        public double Range { get; set; }
-        public bool IsPointDefense { get; set; }
 
         public ICollection<ActionData> ActionData { get; set; }
         public ICollection<ShipPartData> ShipPartData { get; set; }

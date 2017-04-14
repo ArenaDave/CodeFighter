@@ -30,18 +30,9 @@ namespace CodeFighter.Data.Migrations
                         Name = c.String(),
                         Description = c.String(),
                         MaxHP = c.Int(nullable: false),
-                        Mass = c.Double(nullable: false),
-                        DR = c.Int(nullable: false),
-                        DownAdjective = c.String(),
-                        PenetrateVerb = c.String(),
-                        Thrust = c.Double(nullable: false),
-                        WeaponDamage = c.Int(nullable: false),
-                        CritMultiplier = c.Int(nullable: false),
-                        ReloadTime = c.Int(nullable: false),
+                        DefenseType = c.String(),
                         DamageType = c.String(),
                         FiringType = c.String(),
-                        Range = c.Double(nullable: false),
-                        IsPointDefense = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -134,7 +125,6 @@ namespace CodeFighter.Data.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         ClassName = c.String(),
-                        MaxHP = c.Int(nullable: false),
                         HullSize = c.String(),
                     })
                 .PrimaryKey(t => t.Id);

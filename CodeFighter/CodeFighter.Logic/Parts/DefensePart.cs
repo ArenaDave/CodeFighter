@@ -11,6 +11,10 @@ namespace CodeFighter.Logic.Parts
     {
         #region Public Properties
         public int DR { get; private set; }
+        public int DRVsEnergy { get; private set; }
+        public int DRVsPlasma { get; private set; }
+        public int DRVsExplosive { get; private set; }
+        public int DRVsKinetic { get; private set; }
         public string DownAdjective { get; private set; }
         public string PenetrateVerb { get; private set; }
         #endregion
@@ -21,14 +25,14 @@ namespace CodeFighter.Logic.Parts
         #region Public Methods
         public override string ToString()
         {
-            return string.Format("{0} (DR:{1}) (HP:{2}/{3}){4}", this.Name, DR.ToString(), HP.Current.ToString(), HP.Max.ToString(), this.IsDestroyed ? " [DESTROYED!]" : "");
+            return string.Format("{0} (DR:{1}) (HP:{2}/{3}){4}", this.Name, string.Format("{0}/{1}/{2}/{3}",DRVsEnergy,DRVsPlasma,DRVsExplosive,DRVsKinetic), HP.Current.ToString(), HP.Max.ToString(), this.IsDestroyed ? " [DESTROYED!]" : "");
         }
         /// <summary>
         /// Handles incoming damage
         /// </summary>
         /// <param name="Damage">Amount of incoming damage</param>
         /// <returns>Status result and remaining damage</returns>
-        public DefenseResult TakeHit(int Damage)
+        public DefenseResult TakeHit(int Damage, string damageType)
         {
             DefenseResult result = new DefenseResult();
             if (HP.Current <= 0)
@@ -36,6 +40,24 @@ namespace CodeFighter.Logic.Parts
                 result.Remainder = Damage;
                 result.Messages.Add(string.Format("{0} is {1}!", this.Name, DownAdjective));
                 return result;
+            }
+
+            int DR = 0;
+            if (damageType == DamageType.Energy)
+            {
+                DR = this.DRVsEnergy;
+            }
+            else if(damageType == DamageType.Plasma)
+            {
+                DR = this.DRVsPlasma;
+            }
+            else if(damageType == DamageType.Explosive)
+            {
+                DR = this.DRVsExplosive;
+            }
+            else if(damageType==DamageType.Kinetic)
+            {
+                DR = this.DRVsKinetic;
             }
 
             if (Damage <= DR)
@@ -75,7 +97,10 @@ namespace CodeFighter.Logic.Parts
             copy.IsDestroyed = this.IsDestroyed;
             copy.Mass = this.Mass;
             copy.Actions = (List<BaseAction>)this.Actions.Clone();
-            copy.DR = this.DR;
+            copy.DRVsEnergy = this.DRVsEnergy;
+            copy.DRVsPlasma = this.DRVsPlasma;
+            copy.DRVsExplosive = this.DRVsExplosive;
+            copy.DRVsKinetic = this.DRVsKinetic;
             copy.DownAdjective = (string)this.DownAdjective.Clone();
             copy.PenetrateVerb = (string)this.PenetrateVerb.Clone();
             return copy;
@@ -83,22 +108,44 @@ namespace CodeFighter.Logic.Parts
         #endregion
 
         #region Constructors
-        public DefensePart(string name, int maxHP, double mass, int damageReduction, string downAdjective, string penetrateVerb, List<BaseAction> actions)
-            : base(name, maxHP, mass, actions)
-        {
-            this.DR = damageReduction;
-            this.DownAdjective = downAdjective;
-            this.PenetrateVerb = penetrateVerb;
-        }
         private DefensePart() : base() { }
-        public DefensePart(PartData data, List<BaseAction> actions)
-            : base(data, actions)
+        public DefensePart(PartData data, KeelClassification classification, List<BaseAction> actions)
+            : base(data, classification, actions)
         {
-            this.DR = data.DR;
-            this.DownAdjective = data.DownAdjective;
-            this.PenetrateVerb = data.PenetrateVerb;
+            setBaseValuesFromDefenseType(data.DefenseType, classification);
         }
         #endregion
+
+        void setBaseValuesFromDefenseType(string defenseType, KeelClassification classification)
+        {
+            if(defenseType == DefenseType.Shield)
+            {
+                this.DRVsEnergy = 3;
+                this.DRVsPlasma = 2;
+                this.DRVsExplosive = 1;
+                this.DRVsKinetic = 0;
+                this.DownAdjective = "Down";
+                this.PenetrateVerb = "Penetrating";
+            }
+            else if(defenseType == DefenseType.Armor)
+            {
+                this.DRVsEnergy = 3;
+                this.DRVsPlasma = 2;
+                this.DRVsExplosive = 3;
+                this.DRVsKinetic = 4;
+                this.DownAdjective = "Destroyed";
+                this.PenetrateVerb = "Shattering";
+            }
+            else if(defenseType == DefenseType.PointDefense)
+            {
+                this.DRVsEnergy = 0;
+                this.DRVsPlasma = 0;
+                this.DRVsExplosive = 4;
+                this.DRVsKinetic = 4;
+                this.DownAdjective = "Offline";
+                this.PenetrateVerb = "Disabling";
+            }
+        }
 
     }
 }

@@ -118,30 +118,30 @@ namespace CodeFighter.Logic.Ships
         /// <summary>
         /// Handles incoming damage to the Ship through any equipped DefenseParts, including resistance based on damage type
         /// </summary>
-        /// <param name="Damage">Amount of damage to take</param>
-        /// <param name="DamageType">Type of damage to take (Data Driven)</param>
+        /// <param name="damage">Amount of damage to take</param>
+        /// <param name="damageType">Type of damage to take (Data Driven)</param>
         /// <returns>List of status results from DefenseParts</returns>
-        public List<string> HitFor(int Damage, string DamageType, out bool isDestroyed)
+        public List<string> HitFor(int damage, string damageType, out bool isDestroyed)
         {
             List<string> result = new List<string>();
             isDestroyed = false;
             // loop through all defense parts and apply the damage to each
             foreach (DefensePart defense in Parts.Where(f => f is DefensePart && !f.IsDestroyed))
             {
-                DefenseResult res = defense.TakeHit(Damage);
-                Damage = res.Remainder;
+                DefenseResult res = defense.TakeHit(damage,damageType);
+                damage = res.Remainder;
                 foreach (string message in res.Messages)
                     result.Add(string.Format(" ==> {0}", message));
-                if (Damage <= 0)
+                if (damage <= 0)
                     break;
             }
             // if there is any damage that got past the defense parts...
-            if (Damage > 0)
+            if (damage > 0)
             {
                 // decrease current HP
-                HP.Current -= Damage;
+                HP.Current -= damage;
 
-                result.Add(string.Format("{0} Damage made it through!", Damage));
+                result.Add(string.Format("{0} Damage made it through!", damage));
 
                 // chance to destroy ship part
                 using (RNG rand = new RNG())

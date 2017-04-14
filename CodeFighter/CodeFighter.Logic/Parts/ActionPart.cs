@@ -36,23 +36,17 @@ namespace CodeFighter.Logic.Parts
         #endregion
 
         #region Constructors
-        public ActionPart(string name, int maxHP, double mass, string actionDescription, List<BaseAction> actions)
-            : base(name,maxHP,mass,actions)
-        {
-            Description = actionDescription;
-            
-        }
+        
+        private ActionPart() : base() { }
 
-        private ActionPart():base() { }
-
-        public ActionPart(PartData data, List<BaseAction> actions)
-            :base(data,actions)
+        public ActionPart(PartData data, KeelClassification classification, List<BaseAction> actions)
+            : base(data, classification, actions)
         {
             Description = data.Description;
         }
         #endregion
 
-        
+
 
 
     }

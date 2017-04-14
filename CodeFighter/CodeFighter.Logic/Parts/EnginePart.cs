@@ -33,18 +33,13 @@ namespace CodeFighter.Logic.Parts
         #endregion
 
         #region Constructors
-        public EnginePart(string name, int maxHP, double mass, List<BaseAction> actions, double thrust)
-            : base(name, maxHP, mass, actions)
-        {
-            this.Thrust = thrust;
-        }
-
+        
         public EnginePart() : base() { }
 
-        public EnginePart(PartData data, List<BaseAction> actions)
-            : base(data, actions)
+        public EnginePart(PartData data, KeelClassification classification, List<BaseAction> actions)
+            : base(data, classification, actions)
         {
-            this.Thrust = data.Thrust;
+            this.Thrust = classification.BaseEngineThrust;
         }
         #endregion
     }

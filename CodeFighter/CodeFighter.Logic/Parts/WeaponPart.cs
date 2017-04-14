@@ -27,6 +27,7 @@ namespace CodeFighter.Logic.Parts
             }
         }
         public int WeaponDamage { get; private set; }
+        public int CritChance { get; private set; }
         public int CritMultiplier { get; private set; }
         public int ReloadTime { get; private set; }
         public string DamageType { get; private set; }
@@ -58,7 +59,7 @@ namespace CodeFighter.Logic.Parts
         /// <returns>Status result</returns>
         public AttackResult Fire()
         {
-            return Fire(11, 96); // 10% miss, 5% crit
+            return Fire(11, 100 - CritChance); // 10% miss, 5% crit
         }
         /// <summary>
         /// Fires the weapon at its existing target with specific hit/crit chances
@@ -138,6 +139,7 @@ namespace CodeFighter.Logic.Parts
             copy.Actions = (List<BaseAction>)this.Actions?.Clone();
             copy.currentReload = this.currentReload;
             copy.WeaponDamage = this.WeaponDamage;
+            copy.CritChance = this.CritChance;
             copy.CritMultiplier = this.CritMultiplier;
             copy.ReloadTime = this.ReloadTime;
             copy.DamageType = (string)this.DamageType?.Clone();
@@ -151,31 +153,72 @@ namespace CodeFighter.Logic.Parts
         #endregion
 
         #region Constructors
-        public WeaponPart(string name, int maxHP, double mass, List<BaseAction> actions, int damage, double range, string damageType, string firingType, int critMultiplier, int reloadTime, bool pointDefense)
-            : base(name, maxHP, mass, actions)
-        {
-            this.WeaponDamage = damage;
-            this.Range = range;
-            this.FiringType = firingType;
-            this.CritMultiplier = critMultiplier;
-            this.ReloadTime = reloadTime;
-            this.IsPointDefense = pointDefense;
-        }
         private WeaponPart() : base() { }
-        public WeaponPart(PartData data, List<BaseAction> actions)
-            : base(data, actions)
+        public WeaponPart(PartData data, KeelClassification classification, List<BaseAction> actions)
+            : base(data, classification, actions)
         {
-            this.WeaponDamage = data.WeaponDamage;
-            this.CritMultiplier = data.CritMultiplier;
-            this.ReloadTime = data.ReloadTime;
-            this.DamageType = data.DamageType;
-            this.FiringType = data.FiringType;
-            this.Range = data.Range;
-            this.IsPointDefense = data.IsPointDefense;
+            baseStatsFromFiringType(data.FiringType, classification);
+            modStatsFromDamageType(data.DamageType);
         }
         #endregion
 
+        void baseStatsFromFiringType(string firingType, KeelClassification classification)
+        {
+            this.FiringType = firingType;
+            if (firingType == Utility.FiringType.Beam)
+            {
+                this.WeaponDamage = Convert.ToInt32(Math.Round(5 * classification.PartFactor));
+                this.ReloadTime = 0;
+                this.CritChance = 5;
+                this.CritMultiplier = 2;
+                this.Range = 3;
+            }
+            else if (firingType == Utility.FiringType.Cannon)
+            {
+                this.WeaponDamage = Convert.ToInt32(Math.Round(10 * classification.PartFactor));
+                this.ReloadTime = 1;
+                this.CritChance = 10;
+                this.CritMultiplier = 3;
+                this.Range = 4;
+            }
+            else if (firingType == Utility.FiringType.Launcher)
+            {
+                this.WeaponDamage = Convert.ToInt32(Math.Round(15 * classification.PartFactor));
+                this.ReloadTime = 2;
+                this.CritChance = 5;
+                this.CritMultiplier = 2;
+                this.Range = 5;
+            }
+            this.IsPointDefense = false;
+        }
 
-
+        void modStatsFromDamageType(string damageType)
+        {
+            this.DamageType = damageType;
+            if (damageType == Utility.DamageType.Energy)
+            {
+                this.WeaponDamage += 1;
+                this.Range -= 1;
+                this.IsPointDefense = true;
+            }
+            else if (damageType == Utility.DamageType.Plasma)
+            {
+                this.ReloadTime += 1;
+                this.CritMultiplier += 2;
+                this.CritChance += 10;
+            }
+            else if (damageType == Utility.DamageType.Explosive)
+            {
+                this.WeaponDamage -= 1;
+                this.Range += 1;
+            }
+            else if (damageType == Utility.DamageType.Kinetic)
+            {
+                this.WeaponDamage += 4;
+                this.ReloadTime -= 1;
+                this.CritChance = 0;
+                this.Range -= 2;
+            }
+        }
     }
 }

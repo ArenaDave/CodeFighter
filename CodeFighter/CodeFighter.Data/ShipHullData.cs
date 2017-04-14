@@ -12,7 +12,6 @@ namespace CodeFighter.Data
         [Key]
         public int Id { get; set; }
         public string ClassName { get; set; }
-        public int MaxHP { get; set; }
         public string HullSize { get; set; }
 
         ICollection<ShipData> ShipData { get; set; }

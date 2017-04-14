@@ -33,11 +33,11 @@ namespace CodeFighter.Logic.Parts
 
         }
 
-        public BasePart(PartData data, List<BaseAction> actions)
+        public BasePart(PartData data, KeelClassification classification, List<BaseAction> actions)
         {
             this.Name = data.Name;
-            this.HP = new StatWithMax(data.MaxHP);
-            this.Mass = data.Mass;
+            this.HP = new StatWithMax(Convert.ToInt32(Math.Round(data.MaxHP*classification.PartFactor)));
+            this.Mass = classification.PartWeight;
             this.Actions = actions;
             this.IsDestroyed = false;
             this.Target = null;

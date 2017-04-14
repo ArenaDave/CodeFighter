@@ -18,6 +18,14 @@ namespace CodeFighter.Logic.Utility
     {
         public static readonly string Beam = "Beam";
         public static readonly string Cannon = "Cannon";
-        public static readonly string Torpedo = "Torpedo";
+        public static readonly string Launcher = "Launcher";
     }
+
+    public static class DefenseType
+    {
+        public static readonly string Shield = "Shield";
+        public static readonly string Armor = "Armor";
+        public static readonly string PointDefense = "PointDefense";
+    }
+
 }

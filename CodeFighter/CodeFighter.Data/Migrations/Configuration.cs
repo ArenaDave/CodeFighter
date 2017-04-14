@@ -29,8 +29,8 @@ namespace CodeFighter.Data.Migrations
             //
 
             #region ACTIONS
-            var repairPart = new ActionData() { Id = 1, Type="RepairPart", Name = "Sheild Regeneration", Description = "Shields regenerate 2HP each round", TargetSelfPart = true, ActionValuesJSON = "{\"RepairAmount\":2}" };
-            var repairShip = new ActionData() { Id = 2, Type="RepairShip", Name = "Damage Control Teams", Description = "Damage Control teams repair the ship for 5HP per round", TargetSelfShip = true, ActionValuesJSON = "{\"RepairAmount\":5}" };
+            var repairPart = new ActionData() { Id = 1, Type = "RepairPart", Name = "Sheild Regeneration", Description = "Shields regenerate 2HP each round", TargetSelfPart = true, ActionValuesJSON = "{\"RepairAmount\":2}" };
+            var repairShip = new ActionData() { Id = 2, Type = "RepairShip", Name = "Damage Control Teams", Description = "Damage Control teams repair the ship for 5HP per round", TargetSelfShip = true, ActionValuesJSON = "{\"RepairAmount\":5}" };
 
             context.ActionData.AddOrUpdate(x => x.Id,
                 repairPart,
@@ -41,25 +41,27 @@ namespace CodeFighter.Data.Migrations
             #region PARTS
             // weapons
             //** laser beam
-            var laserBeam = new PartData() { Id = 1, Type = "Weapon", Name = "Laser Beam", Description = "Freaking Lasers", MaxHP = 1, Mass = 50, WeaponDamage = 5, CritMultiplier = 2, ReloadTime = 0, DamageType = "Energy", FiringType = "Beam", Range = 2.0, IsPointDefense = true };
+            var laserBeam = new PartData() { Id = 1, Type = "Weapon", Name = "Laser Beam", Description = "Freaking Lasers", MaxHP = 1, DamageType = "Energy", FiringType = "Beam" };
             //** plasma cannon
-            var plasmaCannon = new PartData() { Id = 2, Type = "Weapon", Name = "Plasma Cannon", Description = "BURNNNNN!", MaxHP = 1, Mass = 50, WeaponDamage = 12, CritMultiplier = 3, ReloadTime = 1, DamageType = "Plasma", FiringType = "Cannon", Range = 3.0, IsPointDefense = false };
+            var plasmaCannon = new PartData() { Id = 2, Type = "Weapon", Name = "Plasma Cannon", Description = "BURNNNNN!", MaxHP = 1, DamageType = "Plasma", FiringType = "Cannon" };
             //** torpedo
-            var torpedoLauncher = new PartData() { Id = 3, Type = "Weapon", Name = "Torpedo Launcher", Description = "All Tubes, Fire!", MaxHP = 1, Mass = 50, WeaponDamage = 20, CritMultiplier = 2, ReloadTime = 3, DamageType = "Explosive", FiringType = "Torpedo", Range = 5.0, IsPointDefense = false };
+            var torpedoLauncher = new PartData() { Id = 3, Type = "Weapon", Name = "Torpedo Launcher", Description = "All Tubes, Fire!", MaxHP = 1, DamageType = "Explosive", FiringType = "Launcher" };
 
             // defenses
             //** shield generator
-            var shieldGenerator = new PartData() { Id = 4, Type = "Defense", Name = "Shield Generator", Description = "Regenerative Shielding", MaxHP = 15, Mass = 50, DR = 1, DownAdjective = "Down", PenetrateVerb = "Penetrating", ActionData = new List<ActionData>() { repairPart } };
+            var shieldGenerator = new PartData() { Id = 4, Type = "Defense", Name = "Shield Generator", Description = "Regenerative Shielding", MaxHP = 15, DefenseType= "Shield", ActionData = new List<ActionData>() { repairPart } };
             //** armor plate
-            var armorPlate = new PartData() { Id = 5, Type = "Defense", Name = "Armor Plating", Description = "Reactive Armor", MaxHP = 15, Mass = 50, DR = 3, DownAdjective = "Down", PenetrateVerb = "Penetrating" };
+            var armorPlate = new PartData() { Id = 5, Type = "Defense", Name = "Armor Plating", Description = "Reactive Armor", MaxHP = 15, DefenseType="Armor" };
+            //** point defense
+            var pointDefense = new PartData() { Id = 8, Type = "Defense", Name = "Point Defense Pod", Description = "Close In Weapons System", MaxHP = 15, DefenseType = "PointDefense" };
 
             // actions
             //** damage control
-            var damageControl = new PartData() { Id = 6, Type = "Action", Name = "Damage Control", Description = "Repair 5HP per round, 50% chance to repair a destroyed part", MaxHP = 1, Mass = 50, ActionData = new List<ActionData>() { repairShip } };
+            var damageControl = new PartData() { Id = 6, Type = "Action", Name = "Damage Control", Description = "Repair 5HP per round, 50% chance to repair a destroyed part", MaxHP = 1, ActionData = new List<ActionData>() { repairShip } };
 
             // engines
             //** thruster
-            var thruster = new PartData() { Id = 7, Type = "Engine", Name = "DU-1 Thruster", Description = "Make It Go Faster!", MaxHP = 1, Mass = 50, Thrust = 450 };
+            var thruster = new PartData() { Id = 7, Type = "Engine", Name = "DU-1 Thruster", Description = "Make It Go Faster!", MaxHP = 1 };
 
             context.PartData.AddOrUpdate(x => x.Id,
                 laserBeam,
@@ -67,14 +69,15 @@ namespace CodeFighter.Data.Migrations
                 torpedoLauncher,
                 shieldGenerator,
                 armorPlate,
+                pointDefense,
                 damageControl,
                 thruster
             );
             #endregion
-            
+
             #region SHIPHULLS
-            var hullIowa = new ShipHullData() { Id = 1, ClassName = "Iowa", HullSize = "CO", MaxHP = 40 };
-            var hullBunker = new ShipHullData() { Id = 2, ClassName = "Bunker", HullSize = "CO", MaxHP = 40 };
+            var hullIowa = new ShipHullData() { Id = 1, ClassName = "Iowa", HullSize = "CO" };
+            var hullBunker = new ShipHullData() { Id = 2, ClassName = "Bunker", HullSize = "CO" };
 
             context.ShipHullData.AddOrUpdate(x => x.Id,
                 hullIowa,
@@ -88,7 +91,7 @@ namespace CodeFighter.Data.Migrations
                 Id = 1,
                 Name = "UNSC Missouri",
                 ShipHull = hullIowa
-                
+
             };
             missouri.Parts = new List<ShipPartData>()
                 {

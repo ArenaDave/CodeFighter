@@ -19,10 +19,9 @@ namespace CodeFighter.Logic.Ships
 
         }
 
-        public ShipHull(string name, string hullSize, int hp)
+        public ShipHull(string name, string hullSize)
         {
             ClassName = name;
-            HullPoints = new StatWithMax(hp);
             Size = Keel.ByDesignator(hullSize);
             MaxParts = Convert.ToInt32(Math.Round(Size.MaxAddedMass / Size.Classification.PartWeight));
             MaxPartsByType = new CloneableDictionary<Type, int>();
@@ -30,6 +29,7 @@ namespace CodeFighter.Logic.Ships
             MaxPartsByType[typeof(DefensePart)] = Convert.ToInt32(Math.Round(MaxParts * 0.2));
             MaxPartsByType[typeof(ActionPart)] = Convert.ToInt32(Math.Round(MaxParts * (Size.Grade == "Light" ? 0.1 : (Size.Grade == "Medium" ? 0.15 : 0.17))));
             MaxPartsByType[typeof(EnginePart)] = Convert.ToInt32(Math.Round(MaxParts * (Size.Grade == "Light" ? 0.6 : (Size.Grade == "Medium" ? 0.45 : 0.35))));
+            HullPoints = new StatWithMax(Convert.ToInt32((Size.BaseMass + Size.MaxAddedMass) / 100));
         }
 
         public object Clone()
