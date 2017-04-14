@@ -64,7 +64,7 @@ namespace CodeFighter.Logic.Ships
                 if (totalThrust <= 0)
                     return 0;
 
-                int MP = Convert.ToInt32(Math.Round(Hull.Size.Classification.Factor * totalThrust / TotalMass));
+                int MP = Convert.ToInt32(Math.Round(Hull.Size.Classification.ThrustFactor * totalThrust / TotalMass));
 
                 return MP;
             }

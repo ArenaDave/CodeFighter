@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>CodeFighter - Shipyard</title>
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="Content/bootstrap.min.css" />
+
+    <script type="text/javascript" src="Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="Scripts//bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="Content/app.css" />
+
+    <style>
+        .wrapper {
+            position: relative;
+        }
+        .panel {
+            background-color: darkgray;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+
+            // get the width of the first content box
+            var contentWidth = '-' + ($('.content').width() + 50) + 'px';
+
+            // reposition the content here in case javascript is disabled
+            $('.content').css({
+                position: 'absolute',
+                left: contentWidth
+            });
+
+            $(".clearBox").click(function () {
+                $('.content.visible')
+					.removeClass('visible')
+					// move the old content past the current window width, then reset it's position
+					.animate({
+					    left: 0
+					}, function () {
+					    // Remove left setting after the animation completes
+					    $(this).css('left', 0);
+					});
+            });
+
+            $(".nextBox").click(function () {
+                event.preventDefault();
+                var $blockID = $($(this).attr('href'));
+                // if the content is already showing, don't do anything
+                if ($blockID.hasClass('visible')) { return; }
+                // hide any visible content
+                $('.content.visible')
+					.removeClass('visible')
+					// move the old content past the current window width, then reset it's position
+					.animate({
+					    left: $(window).width()
+					}, function () {
+					    // Remove left setting after the animation completes
+					    $(this).css('left', 0);
+					});
+                $blockID
+					.addClass('visible')
+					.animate({ left: $(window).width() / 2 });
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <div id='shipDetails' class='panel panel-default col-xs-12 col-md-6 clearfix' style='min-height:50em; z-index:50;'>
+        SHIP DETAILS<br /><hr /><br />
+        <button href='#keel' class='nextBox btn btn-default'>Select Keel</button><br />
+        <button href='#hull' class='nextBox btn btn-default'>Change Hull</button><br />
+        <button href='#ship' class='nextBox btn btn-default'>Change Ship</button><br />
+        <button href='#part' class='nextBox btn btn-default'>Add Part</button>
+    </div>
+    <div class='wrapper'>
+        <div id='keel' class='content col-xs-12 col-md-6'>
+            <div class='panel panel-default ' style='min-height:5em;'>
+                Keel Size<br /><br />
+                <button href='#hull' class='nextBox'>Use This Keel</button>
+            </div>
+        </div>
+        <div id='hull' class='content col-xs-12 col-md-6'>
+            <div class='panel panel-default' style='min-height:5em;'>
+                Hull Selection
+                <br /><br />
+                <button href='#keel' class='nextBox'>Back to Keel</button>
+                <button href='#ship' class='nextBox'>Use This Hull</button>
+            </div>
+        </div>
+        <div id='ship' class='content col-xs-12 col-md-6'>
+            <div class='panel panel-default' style='min-height:5em;'>
+                Ship Details<br /><br />
+                <button href='#hull' class='nextBox'>Back to Hull</button>
+                <button href='#part' class='nextBox'>Add Part</button>
+            </div>
+        </div>
+        <div id='part' class='content col-xs-12 col-md-6'>
+            <div class='panel panel-default' style='min-height:5em;'>
+                Part Details<br /><br />
+                <button href='#ship' class='clearBox'>Back to Ship</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -5,7 +5,7 @@ namespace CodeFighter.Logic.Ships
     public struct KeelClassification
     {
         public string Name { get; internal set; }
-        public double Factor { get; internal set; }
+        public double ThrustFactor { get; internal set; }
         public double PartWeight { get; internal set; }
         public double PartFactor { get; internal set; }
         public double BaseEngineThrust { get; internal set; }
@@ -13,9 +13,9 @@ namespace CodeFighter.Logic.Ships
 
     public static class KeelClassificationFactory
     {
-        public static readonly KeelClassification Escort = new KeelClassification() { Name = "Escort", Factor = 4, PartWeight = 100, PartFactor = 1, BaseEngineThrust = 450 }; // best thrust per engine: 900
-        public static readonly KeelClassification Cruiser = new KeelClassification() { Name = "Cruiser", Factor = 5, PartWeight = 200, PartFactor = 2, BaseEngineThrust=750 }; // best thrust per engine: 1500
-        public static readonly KeelClassification Capital = new KeelClassification() { Name = "Capital", Factor = 5, PartWeight = 300, PartFactor = 3, BaseEngineThrust=1175 }; // best thrust per engine: 2350
+        public static readonly KeelClassification Escort = new KeelClassification() { Name = "Escort", ThrustFactor = 4, PartWeight = 100, PartFactor = 1, BaseEngineThrust = 450 }; // best thrust per engine: 900
+        public static readonly KeelClassification Cruiser = new KeelClassification() { Name = "Cruiser", ThrustFactor = 5, PartWeight = 200, PartFactor = 2, BaseEngineThrust=750 }; // best thrust per engine: 1500
+        public static readonly KeelClassification Capital = new KeelClassification() { Name = "Capital", ThrustFactor = 5, PartWeight = 300, PartFactor = 3, BaseEngineThrust=1175 }; // best thrust per engine: 2350
     }
 
 

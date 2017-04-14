@@ -79,10 +79,11 @@ namespace CodeFighter.Logic.Parts
 
                 if (hitNum >= critAbove)
                 {
-                    messages.Add(string.Format("{0} CRITS {1} for {2}",
+                    messages.Add(string.Format("{0} CRITS {1} for {2}{3}",
                         this.Name,
                         targetShip.Name,
-                        this.WeaponDamage * this.CritMultiplier
+                        this.WeaponDamage * this.CritMultiplier,
+                        (string.IsNullOrEmpty(this.DamageType) ? "" : string.Format(" ({0})", this.DamageType))
                         ));
                     messages = messages.Concat(targetShip.HitFor(WeaponDamage * CritMultiplier, DamageType, out result.TargetDestroyed)).ToList<string>();
                     result.IsHit = true;
@@ -90,10 +91,11 @@ namespace CodeFighter.Logic.Parts
                 }
                 else if (hitNum >= hitAbove)
                 {
-                    messages.Add(string.Format("{0} hits {1} for {2}",
+                    messages.Add(string.Format("{0} hits {1} for {2}{3}",
                         this.Name,
                         targetShip.Name,
-                        this.WeaponDamage
+                        this.WeaponDamage,
+                        (string.IsNullOrEmpty(this.DamageType)?"":string.Format(" ({0})",this.DamageType))
                         ));
                     messages = messages.Concat(targetShip.HitFor(WeaponDamage, DamageType, out result.TargetDestroyed)).ToList<string>();
                     result.IsCrit = false;
@@ -170,7 +172,7 @@ namespace CodeFighter.Logic.Parts
                 this.WeaponDamage = Convert.ToInt32(Math.Round(5 * classification.PartFactor));
                 this.ReloadTime = 0;
                 this.CritChance = 5;
-                this.CritMultiplier = 2;
+                this.CritMultiplier = 3;
                 this.Range = 3;
             }
             else if (firingType == Utility.FiringType.Cannon)
@@ -178,7 +180,7 @@ namespace CodeFighter.Logic.Parts
                 this.WeaponDamage = Convert.ToInt32(Math.Round(10 * classification.PartFactor));
                 this.ReloadTime = 1;
                 this.CritChance = 10;
-                this.CritMultiplier = 3;
+                this.CritMultiplier = 2;
                 this.Range = 4;
             }
             else if (firingType == Utility.FiringType.Launcher)
@@ -186,7 +188,7 @@ namespace CodeFighter.Logic.Parts
                 this.WeaponDamage = Convert.ToInt32(Math.Round(15 * classification.PartFactor));
                 this.ReloadTime = 2;
                 this.CritChance = 5;
-                this.CritMultiplier = 2;
+                this.CritMultiplier = 3;
                 this.Range = 5;
             }
             this.IsPointDefense = false;
