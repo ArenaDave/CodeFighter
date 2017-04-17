@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CodeFighter.Logic.Ships
 {
@@ -75,6 +76,18 @@ namespace CodeFighter.Logic.Ships
             }
         }
 
+        public override string ToString()
+        {
+            return string.Format("{0} ({1}) [{2} {3}] (Base: {4}Mt, Max Added: {5}Mt)",
+                Name,
+                Designator,
+                Grade,
+                Classification.Name,
+                BaseMass.ToString("0.0"),
+                MaxAddedMass.ToString("0.0")
+                );
+        }
+
         #region Factory
         public static Keel ByDesignator(string designator)
         {
@@ -102,6 +115,21 @@ namespace CodeFighter.Logic.Ships
                     return Corvette();
             }
 
+        }
+
+        public static List<Keel> All()
+        {
+            List<Keel> result = new List<Keel>();
+            result.Add(ByDesignator("DN"));
+            result.Add(ByDesignator("BB"));
+            result.Add(ByDesignator("BC"));
+            result.Add(ByDesignator("CV"));
+            result.Add(ByDesignator("HC"));
+            result.Add(ByDesignator("LC"));
+            result.Add(ByDesignator("DD"));
+            result.Add(ByDesignator("FR"));
+            result.Add(ByDesignator("CO"));
+            return result;
         }
 
         public static Keel Dreadnought()

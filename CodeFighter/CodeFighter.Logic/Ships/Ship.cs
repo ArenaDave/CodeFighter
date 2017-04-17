@@ -33,7 +33,7 @@ namespace CodeFighter.Logic.Ships
         public List<BasePart> Parts { get; set; }
         public Point Position { get; set; }
         public ShipHull Hull { get; set; }
-        public StatWithMax HP { get { return this.Hull.HullPoints; } }
+        public StatWithMax HP { get { return this.Hull.Hitpoints; } }
         public StatWithMax MP { get; internal set; }
         public double TotalMass
         {

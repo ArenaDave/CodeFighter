@@ -52,11 +52,12 @@
     <Compile Include="ActionData.cs" />
     <Compile Include="CodeFighterContext.cs" />
     <Compile Include="FeatureData.cs" />
-    <Compile Include="Migrations\201704141419534_Initialize.cs" />
-    <Compile Include="Migrations\201704141419534_Initialize.Designer.cs">
-      <DependentUpon>201704141419534_Initialize.cs</DependentUpon>
+    <Compile Include="Migrations\201704161846231_Initialize.cs" />
+    <Compile Include="Migrations\201704161846231_Initialize.Designer.cs">
+      <DependentUpon>201704161846231_Initialize.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="PartCountData.cs" />
     <Compile Include="PartData.cs" />
     <Compile Include="PlayerData.cs" />
     <Compile Include="PlayerScenarioData.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="ScenarioShipData.cs" />
     <Compile Include="ShipData.cs" />
     <Compile Include="ShipHullData.cs" />
+    <Compile Include="ShipHullPartCountData.cs" />
     <Compile Include="ShipPartData.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -78,8 +80,8 @@
     <Content Include="Migrations\readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201704141419534_Initialize.resx">
-      <DependentUpon>201704141419534_Initialize.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704161846231_Initialize.resx">
+      <DependentUpon>201704161846231_Initialize.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

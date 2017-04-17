@@ -126,6 +126,32 @@ namespace CodeFighter.Data.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         ClassName = c.String(),
                         HullSize = c.String(),
+                        MaxHitPoints = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.ShipHullPartCountDatas",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        ShipHullDataId = c.Int(nullable: false),
+                        PartCountDataId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.PartCountDatas", t => t.PartCountDataId, cascadeDelete: true)
+                .ForeignKey("dbo.ShipHullDatas", t => t.ShipHullDataId, cascadeDelete: true)
+                .Index(t => t.ShipHullDataId)
+                .Index(t => t.PartCountDataId);
+            
+            CreateTable(
+                "dbo.PartCountDatas",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        PartType = c.String(),
+                        ActionMechanism = c.String(),
+                        CountOfParts = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -175,6 +201,8 @@ namespace CodeFighter.Data.Migrations
             DropForeignKey("dbo.PlayerScenarioDatas", "ScenarioDataId", "dbo.ScenarioDatas");
             DropForeignKey("dbo.PlayerScenarioDatas", "PlayerDataId", "dbo.PlayerDatas");
             DropForeignKey("dbo.ShipDatas", "ShipHullDataId", "dbo.ShipHullDatas");
+            DropForeignKey("dbo.ShipHullPartCountDatas", "ShipHullDataId", "dbo.ShipHullDatas");
+            DropForeignKey("dbo.ShipHullPartCountDatas", "PartCountDataId", "dbo.PartCountDatas");
             DropForeignKey("dbo.ScenarioShipDatas", "ShipDataId", "dbo.ShipDatas");
             DropForeignKey("dbo.ScenarioShipDatas", "ScenarioDataId", "dbo.ScenarioDatas");
             DropForeignKey("dbo.ScenarioFeatureDatas", "ScenarioDataId", "dbo.ScenarioDatas");
@@ -187,6 +215,8 @@ namespace CodeFighter.Data.Migrations
             DropIndex("dbo.PartDataActionDatas", new[] { "PartData_Id" });
             DropIndex("dbo.PlayerScenarioDatas", new[] { "ScenarioDataId" });
             DropIndex("dbo.PlayerScenarioDatas", new[] { "PlayerDataId" });
+            DropIndex("dbo.ShipHullPartCountDatas", new[] { "PartCountDataId" });
+            DropIndex("dbo.ShipHullPartCountDatas", new[] { "ShipHullDataId" });
             DropIndex("dbo.ScenarioFeatureDatas", new[] { "FeatureDataId" });
             DropIndex("dbo.ScenarioFeatureDatas", new[] { "ScenarioDataId" });
             DropIndex("dbo.ScenarioShipDatas", new[] { "ShipDataId" });
@@ -197,6 +227,8 @@ namespace CodeFighter.Data.Migrations
             DropTable("dbo.PartDataActionDatas");
             DropTable("dbo.PlayerScenarioDatas");
             DropTable("dbo.PlayerDatas");
+            DropTable("dbo.PartCountDatas");
+            DropTable("dbo.ShipHullPartCountDatas");
             DropTable("dbo.ShipHullDatas");
             DropTable("dbo.FeatureDatas");
             DropTable("dbo.ScenarioFeatureDatas");

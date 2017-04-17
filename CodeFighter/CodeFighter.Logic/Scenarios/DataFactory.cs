@@ -132,5 +132,39 @@ namespace CodeFighter.Logic.Scenarios
             return result;
         }
 
+        public static List<ShipHull> GetShipHulls(string keelDesignator)
+        {
+            using(CodeFighterContext db = new CodeFighterContext())
+            {
+                List<ShipHull> result = new List<ShipHull>();
+
+                IQueryable<ShipHullData> hullData = db.ShipHullData
+                    .Include("PartCounts").Include("PartCounts.PartCountData");
+                if(!string.IsNullOrEmpty(keelDesignator))
+                    hullData = hullData.Where(x => x.HullSize.Equals(keelDesignator));
+                foreach(ShipHullData shd in hullData)
+                {
+                    ShipHull hull = new ShipHull();
+                    hull.Id = shd.Id;
+                    hull.ClassName = shd.ClassName;
+                    hull.Hitpoints = new StatWithMax(shd.MaxHitPoints);
+                    hull.Size = Keel.ByDesignator(shd.HullSize);
+                    hull.MaxParts = Convert.ToInt32(Math.Round(hull.Size.MaxAddedMass / hull.Size.Classification.PartWeight));
+                    hull.MaxPartsByType = new List<PartCount>();
+                    foreach(ShipHullPartCountData shpcd in shd.PartCounts)
+                    {
+                        PartCount pc = new PartCount();
+                        pc.PartType = Type.GetType(shpcd.PartCountData.PartType);
+                        pc.ActionMechanism = shpcd.PartCountData.ActionMechanism;
+                        pc.CountOfParts = shpcd.PartCountData.CountOfParts;
+                        hull.MaxPartsByType.Add(pc);
+                    }
+                    result.Add(hull);
+                }
+
+                return result;
+
+            }
+        }
     }
 }

@@ -76,8 +76,8 @@ namespace CodeFighter.Data.Migrations
             #endregion
 
             #region SHIPHULLS
-            var hullIowa = new ShipHullData() { Id = 1, ClassName = "Iowa", HullSize = "CO" };
-            var hullBunker = new ShipHullData() { Id = 2, ClassName = "Bunker", HullSize = "CO" };
+            var hullIowa = new ShipHullData() { Id = 1, ClassName = "Iowa", HullSize = "CO", MaxHitPoints=40 };
+            var hullBunker = new ShipHullData() { Id = 2, ClassName = "Bunker", HullSize = "CO", MaxHitPoints=40 };
 
             context.ShipHullData.AddOrUpdate(x => x.Id,
                 hullIowa,

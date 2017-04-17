@@ -24,5 +24,7 @@ namespace CodeFighter.Data
         public DbSet<FeatureData> FeatureData { get; set; }
         public DbSet<ScenarioFeatureData> ScenarioFeatureData { get; set; }
         public DbSet<ActionData> ActionData { get; set; }
+        public DbSet<PartCountData> PartCountData { get; set; }
+        public DbSet<ShipHullPartCountData> ShipHullPartCountData { get; set; }
     }
 }

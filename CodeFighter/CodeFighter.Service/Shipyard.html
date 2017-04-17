@@ -64,6 +64,141 @@
             });
 
         });
+
+        var listOfKeels = [];
+        var listOfHulls = [];
+
+        function getKeels() {
+            var http = new XMLHttpRequest();
+            var url = 'http://localhost/CodeFighter.Service/api/ShipEditor/GetKeels';
+            http.open('GET', url, true);
+            http.onreadystatechange = function () {
+                if (http.readyState == 4 && http.status == 200) {
+                    listOfKeels = JSON.parse(http.responseText).Data;
+                    refreshKeels();
+                }
+            };
+            http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            http.send(null);
+        }
+        function refreshKeels() {
+            var ulKeel = document.getElementById('ulKeel');
+            ulKeel.innerHTML = '';
+            for (var i = 0; i < listOfKeels.length; i++) {
+                var li = document.createElement('li');
+                li.className = 'list-group-item';
+                var keel = listOfKeels[i];
+                li.innerHTML = keel.Name + " ("
+                    + keel.Designator + ") ["
+                    + keel.Grade + " "
+                    + keel.Classification.Name + "] (Base: "
+                    + keel.BaseMass.toFixed(1) + "MMt, Additional Capacity: "
+                    + keel.MaxAddedMass.toFixed(1) + "MMt)";
+                var btn = document.createElement('button');
+                btn.setAttribute('href', '#hull');
+                btn.setAttribute('onclick', 'getHullsForKeel("' + keel.Designator + '")');
+                btn.innerHTML = "<span class=\"glyphicon glyphicon-chevron-right\"></span>";
+                btn.className = "nextBox";
+                li.appendChild(btn);
+                ulKeel.appendChild(li);
+            }
+        }
+
+        function getHullsForKeel(keel) {
+            var http = new XMLHttpRequest();
+            var url = 'http://localhost/CodeFighter.Service/api/ShipEditor/GetHulls?designator='+keel;
+            http.open('GET', url, true);
+            http.onreadystatechange = function () {
+                if (http.readyState == 4 && http.status == 200) {
+                    listOfHulls = JSON.parse(http.responseText).Data;
+                    refreshHulls();
+                }
+            };
+            http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            http.send(null);
+        }
+        function refreshHulls() {
+            var ulHull = document.getElementById('ulHull');
+            ulHull.innerHTML = '';
+            for (var i = 0; i < listOfHulls.length; i++) {
+                var hull = listOfHulls[i];
+                var li = document.createElement('li');
+                li.className = 'list-group-item';
+                var reference = document.getElementById('hullTemplate');
+                var div = document.createElement('div');
+                div.id = 'shipHull' + hull.id;
+                div.className = 'hullTemplate clearfix';
+                div.innerHTML = reference.innerHTML;
+                // set hull details
+                var hullName = div.getElementById('hullName');
+                hullName.innerHTML = hull.Name;
+                var hullClass = div.getElementById('hullClass');
+                hullClass.innerHTML = hull.Size.Name;
+                var hullHP = div.getElementById('hullHP');
+                hullHP.innerHTML = hull.Hitpoints;
+                var hullSlots = div.getElementById('hullSlots');
+                hullSlots.innerHTML = hull.MaxParts;
+                var countEngine = 0;
+                var countActions = 0;
+                var countBeams = 0;
+                var countCannons = 0;
+                var countLaunchers = 0;
+                var countShields = 0;
+                var countArmors = 0;
+                var countPointDefenses = 0;
+                for (var i = 0; i < hull.MaxPartsByType; i++) {
+                    var partCount = hull.MaxPartsByType[i];
+                    if (partCount.PartType.indexOf('WeaponPart')) {
+                        if (partCount.ActionMechanism == 'Beam') {
+                            countBeams += partCount.CountOfParts;
+                        }
+                        else if (partCount.ActionMechanism == 'Cannon') {
+                            countCannons += partCount.CountOfParts;
+                        }
+                        else if (partCount.ActionMechanism == 'Launcher') {
+                            countLaunchers += partCount.CountOfParts;
+                        }
+                    }
+                    else if (partCount.PartType.indexOf('DefensePart')) {
+                        if (partCount.ActionMechanism == 'Shield') {
+                            countShields += partCount.CountOfParts;
+                        }
+                        else if (partCount.ActionMechanism == 'Armor') {
+                            countArmors += partCount.CountOfParts;
+                        }
+                        else if (partCount.ActionMechanism == 'PointDefense') {
+                            countPointDefenses += partCount.CountOfParts;
+                        }
+
+                    }
+                    else if (partCount.PartType.indexOf('EnginePart')) {
+                        countEngine += partCount.CountOfParts;
+                    }
+                    else if (partCount.PartType.indexOf('ActionPart')) {
+                        countActions += partCount.CountOfParts;
+                    }
+                }
+
+                var hullEngine = div.getElementById('hullEngine');
+                hullEngine.innerHTML = countEngine;
+                var hullActions = div.getElementById('hullActions');
+                hullActions.innerHTML = countActions;
+                var hullBeams = div.getElementById('hullBeams');
+                hullBeams.innerHTML = countBeams;
+                var hullCannons = div.getElementById('hullCannons');
+                hullCannons.innerHTML = countCannons;
+                var hullLaunchers = div.getElementById('hullLaunchers');
+                hullLaunchers.innerHTML = countLaunchers;
+                var hullShields = div.getElementById('hullShields');
+                hullShields.innerHTML = countShields;
+                var hullArmors = div.getElementById('hullArmors');
+                hullArmors.innerHTML = countArmors;
+                var hullPointDefenses = div.getElementById('hullPointDefenses');
+                hullPointDefenses.innerHTML = countPointDefenses;
+                li.appendChild(div);
+                ulHull.appendChild(li);
+            }
+        }
     </script>
 </head>
 <body>
@@ -73,18 +208,24 @@
         <button href='#hull' class='nextBox btn btn-default'>Change Hull</button><br />
         <button href='#ship' class='nextBox btn btn-default'>Change Ship</button><br />
         <button href='#part' class='nextBox btn btn-default'>Add Part</button>
+        <br/><button onclick="getKeels();">GetKeels</button>
     </div>
     <div class='wrapper'>
         <div id='keel' class='content col-xs-12 col-md-6'>
-            <div class='panel panel-default ' style='min-height:5em;'>
-                Keel Size<br /><br />
+            <div class='panel panel-default' style='min-height:5em; padding:1em;'>
+                <h3>Keel Size</h3>
+                <ul id="ulKeel" class="list-group">
+
+                </ul>
                 <button href='#hull' class='nextBox'>Use This Keel</button>
             </div>
         </div>
         <div id='hull' class='content col-xs-12 col-md-6'>
             <div class='panel panel-default' style='min-height:5em;'>
-                Hull Selection
-                <br /><br />
+                <h3><span id="spnSelectedKeelName">Corvette</span> Hulls</h3>
+                <ul id="ulHull" class="list-group">
+
+                </ul>
                 <button href='#keel' class='nextBox'>Back to Keel</button>
                 <button href='#ship' class='nextBox'>Use This Hull</button>
             </div>
@@ -101,6 +242,32 @@
                 Part Details<br /><br />
                 <button href='#ship' class='clearBox'>Back to Ship</button>
             </div>
+        </div>
+    </div>
+
+
+    <div class="clearfix hidden" id="hullTemplate">
+        <div class="col-xs-12"><span id="hullName">Iowa</span>-Class <span id="hullClass">Battlecruiser</span></div>
+        <div class="col-xs-12 col-md-6">
+            Max Hitpoints: <span id="hullHP" class="badge">45</span><br />
+            Component Slots: <span id="hullSlots" class="badge">15</span>
+        </div>
+
+        <div class="col-xs-12 col-md-6">
+            Propultion Slots: <span id="hullEngine" class="badge">45</span><br />
+            Action Component Slots: <span id="hullActions" class="badge">45</span>
+        </div>
+
+        <div class="col-xs-12 col-md-6">
+            Beam Mount Points: <span id="hullBeams" class="badge">45</span><br />
+            Cannon Mount Points: <span id="hullCannons" class="badge">45</span><br />
+            Launcher Mount Points: <span id="hullLaunchers" class="badge">45</span>
+        </div>
+
+        <div class="col-xs-12 col-md-6">
+            Shield Generator Mount Points: <span id="hullShields" class="badge">45</span><br />
+            Armor Plating Mount Points: <span id="hullArmors" class="badge">45</span><br />
+            Point Defense Mount Points: <span id="hullPointDefenses" class="badge">45</span>
         </div>
     </div>
 </body>

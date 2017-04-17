@@ -82,6 +82,7 @@
     <Compile Include="Scenarios\Feature.cs" />
     <Compile Include="Scenarios\DataFactory.cs" />
     <Compile Include="Ships\Keel.cs" />
+    <Compile Include="Ships\PartCount.cs" />
     <Compile Include="Ships\Ship.cs" />
     <Compile Include="Ships\ShipHull.cs" />
     <Compile Include="Simulations\IGameLogic.cs" />
