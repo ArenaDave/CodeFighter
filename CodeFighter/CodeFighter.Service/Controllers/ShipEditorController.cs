@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace CodeFighter.Service.Controllers
 {
-    [System.Web.Mvc.RoutePrefix("api/ShipEditor")]
+    [System.Web.Http.Route("api/ShipEditor")]
     public class ShipEditorController : ApiController
     {
         // GET: api/ShipEditor
@@ -25,16 +25,16 @@ namespace CodeFighter.Service.Controllers
         //    return null;
         //}
 
-        [System.Web.Mvc.HttpGet]
-        [System.Web.Mvc.Route("GetHullsByKeel")]
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("api/ShipEditor/GetHullsByKeel/{designator}")]
         public ActionResult GetHullsByKeel(string designator)
         {
             List<ShipHull> hulls = DataFactory.GetShipHulls(designator);
             return new JsonResult() { Data = hulls, ContentType = typeof(WeaponPart).ToString() };
         }
 
-        [System.Web.Mvc.HttpGet]
-        [System.Web.Mvc.Route("GetKeels")]
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("api/ShipEditor/GetKeels")]
         public ActionResult GetKeels()
         {
             List<Keel> keels = Keel.All();
